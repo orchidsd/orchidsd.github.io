@@ -1,0 +1,1 @@
+vless://73f35606-0863-43e5-b7d4-6caf122a1391@singapore.com:80?encryption=none&security=none&type=ws&host=www.weiguang11111.workers.dev&path=%2F%3Fed%3D2048#www.weiguang11111.workers.dev
