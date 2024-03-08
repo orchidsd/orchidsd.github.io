@@ -1,1 +1,10 @@
-vless://73f35606-0863-43e5-b7d4-6caf122a1391@singapore.com:80?encryption=none&security=none&type=ws&host=www.weiguang11111.workers.dev&path=%2F%3Fed%3D2048#www.weiguang11111.workers.dev
+vless://3a689ba7-dc6b-45ff-bf6c-4955013b688b@acjp2.cloudflarest.link:80?encryption=none&security=none&type=ws&host=3344.weiguang1111116261.workers.dev&path=%2F%3Fed%3D2048#3344.weiguang1111116261.workers.dev
+vless://5ca41043-48fe-4182-ae17-7d492f494cf9@acsg.cloudflarest.link:80?encryption=none&security=none&type=ws&host=yoki.weiguang22222proton-me.workers.dev&path=%2F%3Fed%3D2048#yoki.weiguang22222proton-me.workers.dev
+vless://5ca41043-48fe-4182-ae17-7d492f494cf9@acsg3.cloudflarest.link:2052?encryption=none&security=none&type=ws&host=yoki.weiguang22222proton-me.workers.dev&path=%2F%3Fed%3D2048#yoki.weiguang22222proton-me.workers.dev-clone
+vless://73f35606-0863-43e5-b7d4-6caf122a1391@cdn.weiguang3.eu.org:80?encryption=none&security=none&type=ws&host=www.weiguang11111.workers.dev&path=%2F%3Fed%3D2048#www.weiguang11111.workers.dev
+vless://2a19561c-4d4a-4960-b642-9675ac5ec5c2@cdn.weiguang3.eu.org:80?encryption=none&security=none&type=ws&host=www.weiguang22222.workers.dev&path=%2F%3Fed%3D2048#www.weiguang22222.workers.dev
+vless://d769a7f1-d44c-4224-a014-618f8170e048@acjp.cloudflarest.link:443?encryption=none&security=tls&sni=2.weiguang2.eu.org&type=ws&host=2.weiguang2.eu.org&path=%2F%3Fed%3D2048#2.weiguang2.eu.org
+vless://7f545327-625f-4223-8034-532781a192c0@cdn.weiguang3.eu.org:443?encryption=none&security=tls&sni=100.weiguang3.eu.org&fp=random&type=ws&host=100.weiguang3.eu.org&path=%2F%3Fed%3D2048#100.weiguang3.eu.org
+vless://7f545327-625f-4223-8034-532781a192c0@cdn.weiguang3.eu.org:443?encryption=none&security=tls&sni=101.weiguang1.eu.org&fp=random&type=ws&host=101.weiguang1.eu.org&path=%2F%3Fed%3D2048#101.weiguang1.eu.org
+vless://cbd16ef0-30d3-4f25-b54c-861f23250e03@cdn.weiguang3.eu.org:443?encryption=none&security=tls&sni=1.weiguang1.eu.org&fp=random&type=ws&host=1.weiguang1.eu.org&path=%2F%3Fed%3D2048#1.weiguang1.eu.org-pages
+vless://33c2df88-cc81-40fc-b4ac-6aaa63d8da57@cdn.weiguang3.eu.org:443?encryption=none&security=tls&sni=100.weiguang1.eu.org&fp=randomized&type=ws&host=100.weiguang1.eu.org&path=%2F%3Fed%3D2048#100.weiguang1.eu.org
