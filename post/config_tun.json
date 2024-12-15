@@ -131,7 +131,7 @@
     ],
     
     "rule_set": [
-      { "type": "remote", "tag": "zhilian", "format": "source", "url": "/etc/sing-box/customrules/zhilian.srs" },
+      { "type": "remote", "tag": "zhilian", "binary": "source", "url": "https://ghp.ci/https://github.com/orchidsd/orchidsd.github.io/blob/main/post/zhilian.srs", "download_detour": "🎯 全球直连" },
       { "tag": "geosite-chat", "type": "remote", "format": "binary", "url": "https://ghp.ci/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs", "download_detour": "🎯 全球直连" },
       { "tag": "geosite-youtube", "type": "remote", "format": "binary", "url": "https://ghp.ci/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/youtube.srs", "download_detour": "🎯 全球直连" },
       { "tag": "geosite-google", "type": "remote", "format": "binary", "url": "https://ghp.ci/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/google.srs", "download_detour": "🎯 全球直连" },
