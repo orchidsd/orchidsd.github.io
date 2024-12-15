@@ -23,9 +23,9 @@
 
   "dns": {
     "servers": [
-      {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "address_strategy": "ipv4_only", "detour": "🚀 节点选择"},
-      {"tag": "localDns", "address": "223.5.5.5", "address_resolver": "defaultDns", "address_strategy": "ipv4_only", "detour": "🎯 全球直连"},
-      {"tag": "defaultDns", "address": "223.5.5.5", "address_strategy": "ipv4_only", "detour": "🎯 全球直连"}
+      {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "detour": "🚀 节点选择"},
+      {"tag": "localDns", "address": "223.5.5.5", "address_resolver": "defaultDns", "detour": "🎯 全球直连"},
+      {"tag": "defaultDns", "address": "223.5.5.5", "detour": "🎯 全球直连"}
     ],
     "rules": [
       { "outbound": "any", "server": "defaultDns", "disable_cache": true },
@@ -47,18 +47,18 @@
         "client_subnet": "1.0.1.0"
       }
     ],
-    "final": "proxyDns",
-    "strategy": "ipv4_only"
+    "final": "proxyDns"
   },
 
 "inbounds": [
   {
     "type": "tun",
     "address": "172.19.0.1/30",
+    "inet6_address": "fdfe:dcba:9876::1/126",
     "mtu": 9000,
     "auto_route": true,
     "auto_redirect": true,
-    "strict_route": true,
+    "strict_route": false,
     "stack": "system",
     "sniff": true,
     "platform": {
