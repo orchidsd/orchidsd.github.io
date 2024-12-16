@@ -23,7 +23,7 @@
 
   "dns": {
     "servers": [
-      {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "detour": "🚀 节点选择"},
+      {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "client_subnet": "171.34.115.172/24", "detour": "🚀 节点选择"},
       {"tag": "block-dns", "address": "rcode://name_error"},
       {"tag": "localDns", "address": "223.5.5.5", "address_resolver": "defaultDns", "detour": "🎯 全球直连"},
       {"tag": "defaultDns", "address": "223.5.5.5", "detour": "🎯 全球直连"}
