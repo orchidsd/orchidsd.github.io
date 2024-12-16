@@ -24,13 +24,13 @@
   "dns": {
     "servers": [
       {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "address_strategy": "ipv4_only", "detour": "🚀 节点选择"},
-      {"tag": "block-dns", "address": "rcode://refused"},
+      {"tag": "block-dns", "address": "rcode://name_error"},
       {"tag": "localDns", "address": "223.5.5.5", "address_resolver": "defaultDns", "address_strategy": "ipv4_only", "detour": "🎯 全球直连"},
       {"tag": "defaultDns", "address": "223.5.5.5", "address_strategy": "ipv4_only", "detour": "🎯 全球直连"}
     ],
     "rules": [
-      { "rule_set": "ads", "server": "block-dns" },
       { "outbound": "any", "server": "defaultDns", "disable_cache": true },
+      { "query_type": "HTTPS", "server": "block-dns" },
       { "clash_mode": "direct", "server": "localDns" },
       { "clash_mode": "global", "server": "proxyDns" },
       { "rule_set": "geosite-cn", "server": "localDns" },
@@ -109,6 +109,7 @@
     "rules": [
       { "type": "logical", "mode": "or", "rules": [{ "port": 53 }, { "protocol": "dns" }], "outbound": "dns-out" },
       { "protocol": "quic", "outbound": "block-out" },
+      { "rule_set": "ads", "outbound": "block-out" },   
       { "rule_set": "ip_cidr_block", "outbound": "block-out" },
       { "clash_mode": "direct", "outbound": "🎯 全球直连" },
       { "clash_mode": "global", "outbound": "GLOBAL" },
