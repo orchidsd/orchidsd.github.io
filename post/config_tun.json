@@ -108,6 +108,7 @@
         "final": "🐠 漏网之鱼",
     "rules": [
       { "type": "logical", "mode": "or", "rules": [{ "port": 53 }, { "protocol": "dns" }], "outbound": "dns-out" },
+      { "rule_set": "ads_block", "outbound": "block-out" },
       { "protocol": "quic", "outbound": "block-out" },
       { "rule_set": "ip_cidr_block", "outbound": "block-out" },
       { "clash_mode": "direct", "outbound": "🎯 全球直连" },
@@ -130,6 +131,7 @@
     ],
     
     "rule_set": [
+      { "tag": "ads_block", "type": "local", "format": "binary", "path": "/etc/sing-box/customrules/ads_block.srs" },
       { "tag": "ip_cidr_block", "type": "local", "format": "source", "path": "/etc/sing-box/customrules/ip_cidr_block.json" },
       { "tag": "zhilian", "type": "local", "format": "binary", "path": "/etc/sing-box/customrules/zhilian.srs" },
       { "tag": "geosite-chat", "type": "remote", "format": "binary", "url": "https://ghp.ci/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/category-ai-chat-!cn.srs", "download_detour": "🎯 全球直连" },
