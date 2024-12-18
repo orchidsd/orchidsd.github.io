@@ -23,9 +23,9 @@
   
   "dns": {
     "servers": [
-      {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "address_strategy": "ipv4_only", "detour": "🚀 节点选择"},
-      {"tag": "localDns", "address": "223.5.5.5", "address_resolver": "defaultDns", "address_strategy": "ipv4_only", "detour": "🎯 全球直连"},
-      {"tag": "defaultDns", "address": "223.5.5.5", "address_strategy": "ipv4_only", "detour": "🎯 全球直连"}
+      {"tag": "proxyDns", "address": "https://dns.google/dns-query", "address_resolver": "defaultDns", "client_subnet": "1.0.1.0", "detour": "🚀 节点选择"},
+      {"tag": "localDns", "address": "223.5.5.5", "address_resolver": "defaultDns", "detour": "🎯 全球直连"},
+      {"tag": "defaultDns", "address": "223.5.5.5", "detour": "🎯 全球直连"}
     ],
     "rules": [
       { "outbound": "any", "server": "defaultDns", "disable_cache": true },
@@ -58,7 +58,7 @@
       "listen": "0.0.0.0",
       "listen_port": 7895,
       "sniff": true,
-      "sniff_override_destination": false
+      "sniff_override_destination": true
     },
     {
       "type": "mixed",
