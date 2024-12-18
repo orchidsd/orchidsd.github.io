@@ -48,6 +48,7 @@
         "client_subnet": "171.34.115.172/24"
       }
     ],
+    "address_strategy": "ipv4_only",
     "final": "proxyDns"
   },
 
