@@ -12,7 +12,7 @@
 ;设置规则标志位
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/CFnat.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
-ruleset=🎯 全球直连,https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/main/post/zhilian.txt
+ruleset=🎯 全球直连,https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/main/post/zhilian.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/YuanMoo/ClashCustomRule/master/speedtest.list
 ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list
 ruleset=🛑 广告拦截,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list
@@ -45,7 +45,7 @@ ruleset=🌏 国内媒体,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/mast
 ruleset=🌍 国外媒体,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list
 ruleset=🌍 国外媒体,https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/Emby.list
 ruleset=🚀 节点选择,https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/CMBlog.list
-ruleset=🚀 节点选择,https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/main/post/daili.txt
+ruleset=🚀 节点选择,https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/main/post/daili.list
 ruleset=🚀 节点选择,[]DOMAIN-SUFFIX,xn--ngstr-lra8j.com
 ruleset=🚀 节点选择,[]DOMAIN-SUFFIX,services.googleapis.cn
 ruleset=🚀 节点选择,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleCNProxyIP.list
