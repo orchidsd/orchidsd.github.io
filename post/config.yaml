@@ -65,7 +65,7 @@ tun:
   enable: true
   # system/gvisor/mixed
   stack: mixed
-#  dns-hijack: ["any:53", "tcp://any:53"]
+#dns-hijack: ["any:53", "tcp://any:53"]
   auto-route: true
   auto-redirect: true
   auto-detect-interface: true
@@ -147,6 +147,7 @@ rules:
   - RULE-SET,private_domain,直连
   - RULE-SET,proxylite,🚀 默认代理
   - RULE-SET,zhilian,直连
+  - RULE-SET,epic_domain,直连
   - RULE-SET,apple_domain,🍎 Apple
   - RULE-SET,daili,🚀 默认代理
   - RULE-SET,ai,🤖 ChatGPT
@@ -176,6 +177,7 @@ rule-anchor:
   class: &class {type: http, interval: 86400, behavior: classical, format: text}
 rule-providers: 
   private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
+  epic_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/epicgames.mrs"}
   proxylite: { <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/master/ProxyLite.list"}
   daili: { <<: *class, url: "https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/refs/heads/main/post/daili.list"}
   zhilian: { <<: *class, url: "https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/refs/heads/main/post/zhilian.list"}
