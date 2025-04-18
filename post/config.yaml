@@ -80,7 +80,7 @@ dns:
   fake-ip-range: 28.0.0.1/8
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-    - "rule-set:private_domain,cn_domain"
+    - "rule-set:private_domain,zhilian,cn_domain"
     - "+.msftconnecttest.com"
     - "+.msftncsi.com"
     - "time.*.com"
@@ -179,8 +179,8 @@ rule-providers:
   private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
   epic_domain: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/epicgames.mrs"}
   proxylite: { <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/master/ProxyLite.list"}
-  daili: { <<: *class, url: "https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/refs/heads/main/post/daili.list"}
-  zhilian: { <<: *class, url: "https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/refs/heads/main/post/zhilian.list"}
+  daili: { <<: *domain, url: "https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/refs/heads/main/post/daili.mrs"}
+  zhilian: { <<: *domain, url: "https://raw.githubusercontent.com/orchidsd/orchidsd.github.io/refs/heads/main/post/zhilian.mrs"}
   ai: {  <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs" }
   youtube_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
   google_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
