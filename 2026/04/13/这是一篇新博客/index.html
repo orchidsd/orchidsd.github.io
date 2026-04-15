@@ -393,6 +393,8 @@ queueMicrotask(() => {
       imageUploader: true,
       reaction: true, // 动态注入 reaction 配置
       emoji: ["https://unpkg.com/@waline/emojis@1.4.0/weibo","https://unpkg.com/@waline/emojis@1.4.0/tieba","https://unpkg.com/@waline/emojis@1.4.0/bmoji","https://unpkg.com/@waline/emojis@1.4.0/tw-emoji"], // 动态注入 emoji 配置
+      locale: {"placeholder":"分享你的想法吧~ 文明评论，让交流更有价值 ✨","sofa":"抢占沙发~来发评论吧~"}, // 动态注入 locale 配置
+      pageSize: 10, // 动态注入分页配置
     }, null))
 
     const destroyWaline = () => {
