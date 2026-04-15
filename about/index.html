@@ -570,6 +570,8 @@ queueMicrotask(() => {
       path: window.location.pathname,
       comment: true,
       imageUploader: true,
+      reaction: true, // 动态注入 reaction 配置
+      emoji: ["https://unpkg.com/@waline/emojis@1.4.0/weibo","https://unpkg.com/@waline/emojis@1.4.0/tieba","https://unpkg.com/@waline/emojis@1.4.0/bmoji","https://unpkg.com/@waline/emojis@1.4.0/tw-emoji"], // 动态注入 emoji 配置
     }, null))
 
     const destroyWaline = () => {

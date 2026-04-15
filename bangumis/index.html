@@ -60,7 +60,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2026-04-15 17:20:22',
+  postUpdate: '2026-04-15 21:18:46',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -963,6 +963,8 @@ queueMicrotask(() => {
       path: window.location.pathname,
       comment: true,
       imageUploader: true,
+      reaction: true, // 动态注入 reaction 配置
+      emoji: ["https://unpkg.com/@waline/emojis@1.4.0/weibo","https://unpkg.com/@waline/emojis@1.4.0/tieba","https://unpkg.com/@waline/emojis@1.4.0/bmoji","https://unpkg.com/@waline/emojis@1.4.0/tw-emoji"], // 动态注入 emoji 配置
     }, null))
 
     const destroyWaline = () => {
