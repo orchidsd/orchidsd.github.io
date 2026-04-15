@@ -60,7 +60,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2026-04-15 22:57:45',
+  postUpdate: '2026-04-16 00:54:18',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -962,7 +962,35 @@ queueMicrotask(() => {
       dark: 'html[data-theme="dark"]',
       path: window.location.pathname,
       comment: true,
-      imageUploader: true,
+      imageUploader: (file) => {
+  const formData = new FormData();
+  formData.append('file', file); // 将上传的文件附加到表单数据中
+
+  // 上传 API 地址
+  const uploadUrl = 'https://img.weiguang.eu.org/upload';
+
+  return fetch(uploadUrl, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer imgbed_CsZPoZtkbdEyEM1I9ikwWcmKCS9V6v9z', // 替换为你的 API Token
+    },
+    body: formData,
+  })
+    .then((response) => response.json()) // 解析返回的 JSON 数据
+    .then((data) => {
+      if (data && data[0] && data[0].src) {
+        // 拼接完整的图片 URL
+        return `https://img.weiguang.eu.org${data[0].src}`;
+      } else {
+        throw new Error('上传失败：未返回图片链接');
+      }
+    })
+    .catch((error) => {
+      console.error('图片上传失败:', error);
+      throw error;
+    });
+}
+,
       reaction: true, // 动态注入 reaction 配置
       emoji: ["https://unpkg.com/@waline/emojis@1.4.0/weibo","https://unpkg.com/@waline/emojis@1.4.0/tieba","https://unpkg.com/@waline/emojis@1.4.0/bmoji","https://unpkg.com/@waline/emojis@1.4.0/tw-emoji"], // 动态注入 emoji 配置
       locale: {"placeholder":"分享你的想法吧~ 文明评论，让交流更有价值 ✨","sofa":"抢占沙发~来发评论吧~"}, // 动态注入 locale 配置
