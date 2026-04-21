@@ -16316,11 +16316,17 @@ li.card-category-list-item {
 #vcomment textarea:focus {
   background-image: none;
 }
+#waline-wrap textarea {
+  background: url("/img/comment_bg.png") 100% 100% no-repeat;
+}
+#waline-wrap textarea:focus {
+  background-image: none;
+}
 .fireworks {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 5555;
   pointer-events: none;
 }
 .medium-zoom-image--opened {
