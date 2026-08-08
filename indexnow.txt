@@ -1,0 +1,10 @@
+https://blog.weiguang.eu.org/2026/04/12/waline%E6%B7%BB%E5%8A%A0CloudFlare_ImgBed/
+https://blog.weiguang.eu.org/2026/08/08/hello-world/
+https://blog.weiguang.eu.org/2026/07/31/hexo-anzhiyu-series/04-theme-upgrade-patch/
+https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/06-troubleshooting/
+https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/05-lost-contact-stat/
+https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/
+https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/03-backend/
+https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/02-fcircle-page/
+https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/01-link-page/
+https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/05-link-footer-misc/

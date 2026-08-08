@@ -1,0 +1,33 @@
+.fish-pond-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.6rem 0;
+}
+.fish-pond-header .fish-pond-title {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--anzhiyu-fontcolor, #363636);
+  padding-left: 0.5rem;
+  border-left: 4px solid var(--anzhiyu-main, #49b1f5);
+  line-height: 1.4;
+}
+#friend-circle-container #load-more-btn {
+  display: block;
+  color: var(--anzhiyu-fontcolor, #363636);
+}
+#friend-circle-container #load-more-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+#friend-circle-container #load-more-btn:disabled:hover {
+  width: 200px;
+  color: var(--anzhiyu-fontcolor, #363636);
+  background-color: var(--anzhiyu-card-bg, #fff);
+}
+#friend-circle-container #stats-container {
+  display: block;
+  color: var(--anzhiyu-secondtext, #858585);
+}

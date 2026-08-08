@@ -1,0 +1,44 @@
+User-agent: *
+Allow: /
+Disallow: /archives/
+Disallow: /categories/
+Disallow: /tags/
+Disallow: /page/
+Disallow: /css/
+Disallow: /js/
+Disallow: /img/
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
+Disallow: /archives/
+Disallow: /categories/
+Disallow: /tags/
+Disallow: /page/
+Disallow: /css/
+Disallow: /js/
+Disallow: /img/
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /archives/
+Disallow: /categories/
+Disallow: /tags/
+Disallow: /page/
+Disallow: /css/
+Disallow: /js/
+Disallow: /img/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /archives/
+Disallow: /categories/
+Disallow: /tags/
+Disallow: /page/
+Disallow: /css/
+Disallow: /js/
+Disallow: /img/
+
+Sitemap: https://blog.weiguang.eu.org/sitemap.xml
