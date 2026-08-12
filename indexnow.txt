@@ -1,0 +1,10 @@
+https://blog.weiguang.eu.org/2026/04/12/waline%E6%B7%BB%E5%8A%A0CloudFlare_ImgBed/
+https://blog.weiguang.eu.org/2026/08/09/writing-tutorial-methodology/
+https://blog.weiguang.eu.org/2026/08/09/waline-series/02-worker-proxy/
+https://blog.weiguang.eu.org/2026/08/09/waline-series/01-imgbed-upload/
+https://blog.weiguang.eu.org/2026/08/09/waline-series/00-series-index/
+https://blog.weiguang.eu.org/2026/08/09/music-player-series/03-controls-layout/
+https://blog.weiguang.eu.org/2026/08/09/music-player-series/02-lyrics/
+https://blog.weiguang.eu.org/2026/08/09/music-player-series/01-pjax-zero-interrupt/
+https://blog.weiguang.eu.org/2026/08/09/music-player-series/00-series-index/
+https://blog.weiguang.eu.org/2026/08/09/hexo-anzhiyu-series/10-deploy-verify/
