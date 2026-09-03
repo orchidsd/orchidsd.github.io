@@ -1,0 +1,757 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>友链自动检测与自动部署（GitHub Actions） | Yokiの小站</title><meta name="keywords" content="Hexo,系列教程,GitHub Actions,自动化"><meta name="author" content="Yoki"><meta name="copyright" content="Yoki"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#18171d"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="友链自动检测与自动部署（GitHub Actions）"><meta name="application-name" content="友链自动检测与自动部署（GitHub Actions）"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#18171d"><meta property="og:type" content="article"><meta property="og:title" content="友链自动检测与自动部署（GitHub Actions）"><meta property="og:url" content="https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/index.html"><meta property="og:site_name" content="Yokiの小站"><meta property="og:description" content="用 GitHub Actions 实现友链每日自动检测：读后端 &amp;#x2F;friend 的 error 字段自动归类失联友链、自动构建、自动推送到部署产物仓库、Cloudflare 自动上线，并复盘过程中踩过的三个坑。"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://blog.weiguang.eu.org/img/default_cover.jpg"><meta property="article:author" content="Yoki"><meta property="article:tag" content="生活美好，万物可爱"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://blog.weiguang.eu.org/img/default_cover.jpg"><meta name="description" content="用 GitHub Actions 实现友链每日自动检测：读后端 &amp;#x2F;friend 的 error 字段自动归类失联友链、自动构建、自动推送到部署产物仓库、Cloudflare 自动上线，并复盘过程中踩过的三个坑。"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><meta name="google-site-verification" content="7Vk9jQUC-MCvRwx63PyvpPmhBE34lDyMe8poiQ5OtYw"/><meta name="msvalidate.01" content="3F05C70E822FF0BB7D44379897F11312"/><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/"},"headline":"友链自动检测与自动部署（GitHub Actions）","description":"用 GitHub Actions 实现友链每日自动检测：读后端 /friend 的 error 字段自动归类失联友链、自动构建、自动推送到部署产物仓库、Cloudflare 自动上线，并复盘过程中踩过的三个坑。","datePublished":"2026-07-31T00:40:00.000Z","dateModified":"2026-09-03T18:16:57.640Z","author":{"@type":"Person","name":"Yoki","url":"https://blog.weiguang.eu.org/"},"publisher":{"@type":"Organization","name":"Yokiの小站","logo":{"@type":"ImageObject","url":"https://blog.weiguang.eu.org/favicon.ico"}},"image":"https://blog.weiguang.eu.org/img/default_cover.jpg"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Yokiの小站","item":"https://blog.weiguang.eu.org/"},{"@type":"ListItem","position":2,"name":"技术分享","item":"https://blog.weiguang.eu.org/categories/技术分享/"},{"@type":"ListItem","position":3,"name":"友链自动检测与自动部署（GitHub Actions）","item":"https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/"}]}]}</script><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="var(--anzhiyu-main)"/><link rel="mask-icon" href="/img/siteicon/apple-icon-180.png" color="#5bbad5"/><link rel="apple-touch-icon" sizes="180x180" href="/img/siteicon/apple-icon-180.png"/><link rel="apple-touch-icon-precomposed" sizes="180x180" href="/img/siteicon/apple-icon-180.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/siteicon/cartoon-32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/siteicon/cartoon-16.png"/><link rel="bookmark" href="/img/siteicon/apple-icon-180.png"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@6.1.6/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-DKWDY4MZ2F"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-DKWDY4MZ2F');
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: {"enable":true,"title":"与数百名博主无限进步","addFriendPlaceholder":"昵称（请勿包含博客等字样）：\n网站地址（要求博客地址，请勿提交个人主页）：\n头像图片url（请提供尽可能清晰的图片，我会上传到我自己的图床）：\n描述：\n站点截图（可选）：\n"},
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"Yoki","mode":"openai","switchBtn":false,"btnLink":"https://ifdian.net/a/yokipeek","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/","openai":{"apiUrl":"https://api.agnes-ai.cn/v1/chat/completions","model":"agnes-2.5-flash","apiKey":"sk-waMQpvLhQzypaFT9XbzejtQhRoJgAbvZKQwa9SUmDxCg7Y0H","systemPrompt":"你是一个文章摘要助手，请使用简洁的中文概括以下文章的核心内容，不超过200字","maxTokens":500,"temperature":0.7}},
+  diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走！再看看嘛！","backTitle":"♪(^∇^*)欢迎肥来！"},
+  LA51: {"enable":true,"ck":"3QhmqTheuIeNJHd9","LingQueMonitorID":"3QhhHg4cYX5by8v8"},
+  greetingBox: {"enable":true,"default":"晚上好👋","list":[{"greeting":"晚安😴","startTime":0,"endTime":5},{"greeting":"早上好鸭👋, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好👋, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安👋, 宝贝","startTime":12,"endTime":14},{"greeting":"🌈充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧🍔。","startTime":19,"endTime":19},{"greeting":"晚上好👋, 在属于自己的时间好好放松😌~","startTime":20,"endTime":24}]},
+  twikooEnvId: 'https://twikoo.weiguang4.eu.org',
+  commentBarrageConfig:{"enable":true,"maxBarrage":1,"barrageTime":4000,"accessToken":"","mailMd5":"63e1b487d5360438e760d93b15f094aef45244fddfd18ff6170e7a0d2a2aced6"},
+  music_page_default: "custom",
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: {"apiurl":"https://fc.weiguang.eu.org/"},
+  navMusic: true,
+  mainTone: {"mode":"both","api":"https://img2color-go.vercel.app/api?img=","cover_change":true},
+  authorStatus: {"skills":["🤖️ 数码科技爱好者","💢 壮汉人狠话不多"]},
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: Yoki","link":"链接: ","source":"来源: Yokiの小站","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.2.0/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.2.0/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isAnchor: true,
+  shortcutKey: {"enable":true,"delay":100,"shiftDelay":200},
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: 'Yokiの小站',
+  title: '友链自动检测与自动部署（GitHub Actions）',
+  postAI: 'true',
+  pageFillDescription: '一、目标, 二、检测脚本 friend-check.js, 为什么用后端 error而不是自己探测, 三、Workflow：friend-check.yml, 四、三个真实的坑（已修复）, 坑 1：job 没暴露 outputsdeploy 永远被跳过, 坑 2：git init 默认分支是 masterpush main 失败, 坑 3：用 HTTP 探测被站点屏蔽（GitHub Actions IP）, 五、PAT Secret 配置, 六、验证全链路, 七、真实故障演练记录一目标每天自动做这件事读后端的字段后端每小时更新把的友链移入的失联组把的友链移回正常组有变化自动构建推送到集成检测到推送自动部署上线全流程无人值守友链失效恢复页面小时内自动反映二检测脚本位置放这里而不是因为会加载下所有为什么用后端而不是自己探测第一版是脚本直接发请求探测友链结果踩坑的数据中心被部分国内友链站屏蔽如导致正常友链被误判失联而后端跑在环境能访问所有友链且它的语义能否抓到文章和朋友圈显示一致所以最终方案读后端字段本地只做搬运后端不可达时绝不乱动写回正常组放第一组失联组单独友谊长存那些人那些事失联友链已失联的友链设计要点链接先去尾部斜杠再匹配避免和对不上后端不认识的友链保守留在正常组等后端下次抓取后端不可达时直接退出不改文件绝不误删数据三位置每天北京时间手动触发必须声明否则下游读不到只有真的变化才部署见坑四三个真实的坑已修复坑没暴露永远被跳过里级别的必须显式声明否则一直是空的永远不成立症状明明检测到变化并提交了但显示坑默认分支是失败上创建的仓库默认分支是而指定修复后加坑用探测被站点屏蔽第一版脚本直接请求友链域名这类对数据中心有防护的站点全部假失联改成读后端字段后彻底解决后端环境访问无限制五配置用把推到部署产物仓库勾选仓库的博客仓库粘贴六验证全链路手动触发一次观察期望输出无变化时有变化时线上小时内反映新分组七真实故障演练记录这套流程在实战中跑通过完整闭环场景结果真实失联后端判定自动移入失联组模拟失效自动移入失联组恢复自动移回正常组恢复后端自动归位推送自动上线部署历史可见下一篇朋友圈页面的失联统计是怎么显示出来的',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-09-04 02:16:57',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><script>
+window.qweather_key=window.qweather_key||'2bd51aa2dc434a64ad75d58d3d65bae7';
+window.qweather_api_host=window.qweather_api_host||'qq3qqtvrmx.re.qweatherapi.com';
+window.ip_api_key=window.ip_api_key||'fA2rqSZdyXnEAuruGzD3tdtMib';
+window.clock_rectangle=window.clock_rectangle||'115.79,28.68';
+window.clock_default_rectangle_enable=window.clock_default_rectangle_enable||'true';
+</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/clock/clock.min.css"><link rel="alternate" href="/atom.xml" title="Yokiの小站" type="application/atom+xml">
+</head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/baitian/file_6574840.webp"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://blog.weiguang.eu.org/" title="我的博客"><img class="back-menu-item-icon" src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">我的博客</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://hexo.anheyu.com/" title="安知鱼博客"><img class="back-menu-item-icon" src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">安知鱼博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://img.weiguang.eu.org/" title="Yokiの图床"><img class="back-menu-item-icon" src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">Yokiの图床</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">Yokiの小站</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="文章" role="button"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="友链" role="button"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/fcircle/"><i class="anzhiyufont anzhiyu-icon-artstation faa-tada" style="font-size: 0.9em;"></i><span> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="我的" role="button"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/bangumis/"><i class="anzhiyufont anzhiyu-icon-bilibili faa-tada" style="font-size: 0.9em;"></i><span> 追番页</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="关于" role="button"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button only-home" id="travellings_button" title="随机前往一个开往项目网站"><a class="site-page" onclick="anzhiyu.totraveling()" title="随机前往一个开往项目网站" aria-label="随机前往一个开往项目网站" role="button" href="javascript:void(0);" rel="external nofollow" data-pjax-state="external"><i class="anzhiyufont anzhiyu-icon-train"></i></a></div><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" aria-label="随机前往一个文章" role="button" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" aria-label="搜索🔍" role="button" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp" target="_blank"><img class="post-qr-code-img" alt="微信" src="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/AI-%E6%91%98%E8%A6%81/" style="font-size: 1.05rem;">AI 摘要<sup>1</sup></a><a href="/tags/CI-CD/" style="font-size: 1.05rem;">CI/CD<sup>4</sup></a><a href="/tags/Cloudflare-Pages/" style="font-size: 1.05rem;">Cloudflare Pages<sup>1</sup></a><a href="/tags/Cloudflare-Workers/" style="font-size: 1.05rem;">Cloudflare Workers<sup>1</sup></a><a href="/tags/FriendCircle/" style="font-size: 1.05rem;">FriendCircle<sup>4</sup></a><a href="/tags/GitHub-Actions/" style="font-size: 1.05rem;">GitHub Actions<sup>2</sup></a><a href="/tags/Hexo/" style="font-size: 1.05rem;">Hexo<sup>25</sup></a><a href="/tags/Rust/" style="font-size: 1.05rem;">Rust<sup>1</sup></a><a href="/tags/Twikoo/" style="font-size: 1.05rem;">Twikoo<sup>1</sup></a><a href="/tags/Waline/" style="font-size: 1.05rem;">Waline<sup>4</sup></a><a href="/tags/anzhiyu/" style="font-size: 1.05rem;">anzhiyu<sup>21</sup></a><a href="/tags/git/" style="font-size: 1.05rem;">git<sup>1</sup></a><a href="/tags/%E4%B8%BB%E9%A2%98/" style="font-size: 1.05rem;">主题<sup>1</sup></a><a href="/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/" style="font-size: 1.05rem;">主题定制<sup>2</sup></a><a href="/tags/%E5%86%99%E4%BD%9C/" style="font-size: 1.05rem;">写作<sup>1</sup></a><a href="/tags/%E5%8D%87%E7%BA%A7/" style="font-size: 1.05rem;">升级<sup>1</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 1.05rem;">博客搭建<sup>3</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E8%BF%90%E8%90%A5/" style="font-size: 1.05rem;">博客运营<sup>1</sup></a><a href="/tags/%E5%8F%8B%E9%93%BE/" style="font-size: 1.05rem;">友链<sup>2</sup></a><a href="/tags/%E5%9B%BE%E5%BA%8A/" style="font-size: 1.05rem;">图床<sup>2</sup></a><a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 1.05rem;">安全<sup>2</sup></a><a href="/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/" style="font-size: 1.05rem;">安知鱼<sup>1</sup></a><a href="/tags/%E5%BA%95%E9%83%A8%E6%A0%8F/" style="font-size: 1.05rem;">底部栏<sup>1</sup></a><a href="/tags/%E6%8E%92%E9%94%99/" style="font-size: 1.05rem;">排错<sup>1</sup></a><a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 1.05rem;">教程<sup>12</sup></a><a href="/tags/%E6%9D%82%E9%A1%B9%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">杂项配置<sup>1</sup></a><a href="/tags/%E7%94%BB%E5%BB%8A/" style="font-size: 1.05rem;">画廊<sup>1</sup></a><a href="/tags/%E7%9B%B8%E5%86%8C/" style="font-size: 1.05rem;">相册<sup>1</sup></a><a href="/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/" style="font-size: 1.05rem;">系列教程<sup>11</sup></a><a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="font-size: 1.05rem;">统计分析<sup>1</sup></a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" style="font-size: 1.05rem;">自动化<sup>1</sup></a><a href="/tags/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">评论系统<sup>2</sup></a><a href="/tags/%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/" style="font-size: 1.05rem;">音乐播放器<sup>4</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/08/"><span class="card-archive-list-date">八月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">13</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/07/"><span class="card-archive-list-date">七月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">15</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/04/"><span class="card-archive-list-date">四月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" aria-label="显示模式切换" role="button" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch" aria-label="边栏显示控制" role="button"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage" aria-label="热评开关" role="button"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch" aria-label="音乐开关" role="button"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div><div class="console-btn-item" id="consoleKeyboard" onclick="anzhiyu.keyboardToggle()" title="快捷键开关"><a class="keyboard-switch" aria-label="快捷键开关" role="button"><i class="anzhiyufont anzhiyu-icon-keyboard"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);" aria-label="回到顶部" role="button"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换" aria-label="切换" role="button"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" itemprop="url">技术分享</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/Hexo/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Hexo</span></a><a class="article-meta__tags" href="/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>系列教程</span></a><a class="article-meta__tags" href="/tags/GitHub-Actions/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>GitHub Actions</span></a><a class="article-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>自动化</span></a></span></div></div><h1 class="post-title" itemprop="name headline">友链自动检测与自动部署（GitHub Actions）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2026-07-31T00:40:00.000Z" title="发表于 2026-07-31 08:40:00">2026-07-31</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2026-09-03T18:16:57.640Z" title="更新于 2026-09-04 02:16:57">2026-09-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">1.7k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator"></span><span id="" data-flag-title="友链自动检测与自动部署（GitHub Actions）"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span class="waline-pageview-count" data-path="/2026/07/31/friend-circle-series/04-auto-detect-deploy/" title="访问量"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为南昌"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>南昌</span><span class="post-meta-separator"></span><span class="post-meta-commentcount"><i class="anzhiyufont anzhiyu-icon-comments post-meta-icon"></i><span class="post-meta-label">评论数:</span><a class="post-meta-commentcount-item" href="/2026/07/31/friend-circle-series/04-auto-detect-deploy/#post-comment" tabindex="-1" data-comment-system="Twikoo"><span id="twikoo-count"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></a><a class="post-meta-commentcount-item" href="/2026/07/31/friend-circle-series/04-auto-detect-deploy/#post-comment" data-comment-system="Waline"><span class="waline-comment-count" data-path="/2026/07/31/friend-circle-series/04-auto-detect-deploy/"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></a></span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/img/default_cover.jpg" alt="友链自动检测与自动部署（GitHub Actions）" fetchpriority="high"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><div class="post-ai-description"><div class="ai-title"><i class="anzhiyufont anzhiyu-icon-bilibili"></i><div class="ai-title-text">AI-摘要</div><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i><i class="anzhiyufont anzhiyu-icon-circle-dot" title="朗读摘要"></i><div id="ai-tag">Yoki AI</div></div><div class="ai-explanation">AI初始化中...</div><div class="ai-btn-box"><div class="ai-btn-item">介绍自己 🙈</div><div class="ai-btn-item">生成本文简介 👋</div><div class="ai-btn-item">推荐相关文章 📖</div><div class="ai-btn-item">前往主页 🏠</div><div class="ai-btn-item" id="go-tianli-blog">前往爱发电购买</div></div><script data-pjax src="/js/anzhiyu/ai_abstract.js"></script></div><article class="post-content" id="article-container" itemscope itemtype="https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/"><header><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" itemprop="url">技术分享</a><a href="/tags/Hexo/" tabindex="-1" itemprop="url">Hexo</a><a href="/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/" tabindex="-1" itemprop="url">系列教程</a><a href="/tags/GitHub-Actions/" tabindex="-1" itemprop="url">GitHub Actions</a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" tabindex="-1" itemprop="url">自动化</a><h1 id="CrawlerTitle" itemprop="name headline">友链自动检测与自动部署（GitHub Actions）</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">Yoki</span><time itemprop="dateCreated datePublished" datetime="2026-07-31T00:40:00.000Z" title="发表于 2026-07-31 08:40:00">2026-07-31</time><time itemprop="dateCreated datePublished" datetime="2026-09-03T18:16:57.640Z" title="更新于 2026-09-04 02:16:57">2026-09-04</time></header><h2 id="一、目标"><a href="#一、目标" class="headerlink" title="一、目标"></a>一、目标</h2><p>每天自动做这件事：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 读后端 /friend 的 error 字段（后端每 3 小时更新）</span><br><span class="line">2. 把 error=true 的友链移入 link.yml 的失联组</span><br><span class="line">3. 把 error=false 的友链移回正常组</span><br><span class="line">4. 有变化 → 自动构建 hexo → 推送到 orchidsd.github.io</span><br><span class="line">5. Cloudflare Git 集成检测到推送 → 自动部署上线</span><br></pre></td></tr></table></figure>
+
+<p>全流程无人值守。友链失效&#x2F;恢复，<strong>页面 24 小时内自动反映</strong>。</p>
+<h2 id="二、检测脚本-friend-check-js"><a href="#二、检测脚本-friend-check-js" class="headerlink" title="二、检测脚本 friend-check.js"></a>二、检测脚本 friend-check.js</h2><p>位置：<code>friend-check/friend-check.js</code>（放这里而不是 <code>scripts/</code>，因为 Hexo 会加载 <code>scripts/</code> 下所有 js）</p>
+<h3 id="为什么用”后端-error”而不是自己探测"><a href="#为什么用”后端-error”而不是自己探测" class="headerlink" title="为什么用”后端 error”而不是自己探测"></a>为什么用”后端 error”而不是自己探测</h3><p>第一版是脚本直接发 HTTP 请求探测友链。结果踩坑：<strong>GitHub Actions 的数据中心 IP 被部分国内友链站屏蔽</strong>（如 <code>akilar.top</code>），导致正常友链被误判失联。而<strong>后端跑在 Vercel 环境，能访问所有友链</strong>，且它的 <code>error</code> 语义（能否抓到文章）和朋友圈显示一致。所以最终方案：<strong>读后端 error 字段，本地只做”搬运”</strong>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> yaml = <span class="built_in">require</span>(<span class="string">&#x27;js-yaml&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">LINK_FILE</span> = path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;source&#x27;</span>, <span class="string">&#x27;_data&#x27;</span>, <span class="string">&#x27;link.yml&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">FRIEND_API</span> = process.<span class="property">env</span>.<span class="property">FRIEND_API</span> || <span class="string">&#x27;https://fc.weiguang.eu.org/friend&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">norm</span>(<span class="params">url</span>) &#123; <span class="keyword">return</span> <span class="title class_">String</span>(url || <span class="string">&#x27;&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/\/+$/</span>, <span class="string">&#x27;&#x27;</span>); &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">fetchFriendErrors</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="variable constant_">FRIEND_API</span>, &#123;</span><br><span class="line">    <span class="attr">headers</span>: &#123; <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;friend-check/1.0&#x27;</span> &#125;,</span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">15000</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">if</span> (!res.<span class="property">ok</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">`friend API -&gt; HTTP <span class="subst">$&#123;res.status&#125;</span>`</span>);</span><br><span class="line">  <span class="keyword">const</span> list = <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">  <span class="keyword">if</span> (!<span class="title class_">Array</span>.<span class="title function_">isArray</span>(list)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;friend API returned a non-array payload&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> f <span class="keyword">of</span> list) <span class="keyword">if</span> (f &amp;&amp; f.<span class="property">link</span>) map.<span class="title function_">set</span>(<span class="title function_">norm</span>(f.<span class="property">link</span>), <span class="title class_">Boolean</span>(f.<span class="property">error</span>));</span><br><span class="line">  <span class="keyword">return</span> map;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> data = yaml.<span class="title function_">load</span>(fs.<span class="title function_">readFileSync</span>(<span class="variable constant_">LINK_FILE</span>, <span class="string">&#x27;utf8&#x27;</span>));</span><br><span class="line">  <span class="keyword">if</span> (!<span class="title class_">Array</span>.<span class="title function_">isArray</span>(data)) &#123; <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;ERROR: link.yml is not a list&#x27;</span>); process.<span class="title function_">exit</span>(<span class="number">1</span>); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> errMap;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    errMap = <span class="keyword">await</span> <span class="title function_">fetchFriendErrors</span>();</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`WARN: cannot reach friend API (<span class="subst">$&#123;e.message&#125;</span>); leaving link.yml untouched`</span>);</span><br><span class="line">    <span class="keyword">return</span>;   <span class="comment">// 后端不可达时绝不乱动 link.yml</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> normalGroups = data.<span class="title function_">filter</span>(<span class="function">(<span class="params">g</span>) =&gt;</span> !g.<span class="property">lost_contact</span> &amp;&amp; <span class="title class_">Array</span>.<span class="title function_">isArray</span>(g.<span class="property">link_list</span>));</span><br><span class="line">  <span class="keyword">const</span> lostGroup = data.<span class="title function_">find</span>(<span class="function">(<span class="params">g</span>) =&gt;</span> g.<span class="property">lost_contact</span>) || <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> entries = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> g <span class="keyword">of</span> normalGroups) <span class="keyword">for</span> (<span class="keyword">const</span> it <span class="keyword">of</span> g.<span class="property">link_list</span>) entries.<span class="title function_">push</span>(&#123; it, <span class="attr">from</span>: <span class="string">&#x27;normal&#x27;</span> &#125;);</span><br><span class="line">  <span class="keyword">if</span> (lostGroup) <span class="keyword">for</span> (<span class="keyword">const</span> it <span class="keyword">of</span> lostGroup.<span class="property">link_list</span>) entries.<span class="title function_">push</span>(&#123; it, <span class="attr">from</span>: <span class="string">&#x27;lost&#x27;</span> &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (entries.<span class="property">length</span> === <span class="number">0</span>) &#123; <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;No friends to check.&#x27;</span>); <span class="keyword">return</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> classified = entries.<span class="title function_">map</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> key = <span class="title function_">norm</span>(e.<span class="property">it</span>.<span class="property">link</span>);</span><br><span class="line">    <span class="keyword">const</span> known = errMap.<span class="title function_">has</span>(key);</span><br><span class="line">    <span class="keyword">return</span> &#123; ...e, <span class="attr">error</span>: known ? errMap.<span class="title function_">get</span>(key) : <span class="literal">false</span>, known &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> normalList = classified.<span class="title function_">filter</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> !c.<span class="property">error</span>).<span class="title function_">map</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="property">it</span>);</span><br><span class="line">  <span class="keyword">const</span> lostList = classified.<span class="title function_">filter</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="property">error</span>).<span class="title function_">map</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="property">it</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 写回 link.yml：正常组放第一组，失联组单独</span></span><br><span class="line">  <span class="keyword">if</span> (normalGroups.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">    data.<span class="title function_">unshift</span>(&#123; <span class="attr">class_name</span>: <span class="string">&#x27;友谊长存&#x27;</span>, <span class="attr">class_desc</span>: <span class="string">&#x27;那些人，那些事&#x27;</span>,</span><br><span class="line">      <span class="attr">flink_style</span>: <span class="string">&#x27;anzhiyu&#x27;</span>, <span class="attr">hundredSuffix</span>: <span class="string">&#x27;&#x27;</span>, <span class="attr">link_list</span>: normalList &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> g <span class="keyword">of</span> normalGroups) g.<span class="property">link_list</span> = [];</span><br><span class="line">    normalGroups[<span class="number">0</span>].<span class="property">link_list</span> = normalList;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (!lostGroup) &#123;</span><br><span class="line">    data.<span class="title function_">push</span>(&#123; <span class="attr">class_name</span>: <span class="string">&#x27;失联友链&#x27;</span>, <span class="attr">class_desc</span>: <span class="string">&#x27;已失联的友链&#x27;</span>,</span><br><span class="line">      <span class="attr">lost_contact</span>: <span class="literal">true</span>, <span class="attr">flink_style</span>: <span class="string">&#x27;anzhiyu&#x27;</span>, <span class="attr">hundredSuffix</span>: <span class="string">&#x27;&#x27;</span>, <span class="attr">link_list</span>: lostList &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    lostGroup.<span class="property">link_list</span> = lostList;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fs.<span class="title function_">writeFileSync</span>(<span class="variable constant_">LINK_FILE</span>, yaml.<span class="title function_">dump</span>(data, &#123; <span class="attr">lineWidth</span>: <span class="number">200</span>, <span class="attr">noRefs</span>: <span class="literal">true</span> &#125;));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> unknown = classified.<span class="title function_">filter</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> !c.<span class="property">known</span>).<span class="title function_">map</span>(<span class="function">(<span class="params">c</span>) =&gt;</span> c.<span class="property">it</span>.<span class="property">name</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`classified: <span class="subst">$&#123;entries.length&#125;</span>, normal: <span class="subst">$&#123;normalList.length&#125;</span>, lost: <span class="subst">$&#123;lostList.length&#125;</span>`</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> c <span class="keyword">of</span> classified)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`  [<span class="subst">$&#123;c.error ? <span class="string">&#x27;lost&#x27;</span> : <span class="string">&#x27;ok&#x27;</span>&#125;</span>]<span class="subst">$&#123;c.known ? <span class="string">&#x27;&#x27;</span> : <span class="string">&#x27; (untracked)&#x27;</span>&#125;</span> <span class="subst">$&#123;c.it.name&#125;</span> <span class="subst">$&#123;c.it.link&#125;</span>`</span>);</span><br><span class="line">  <span class="keyword">if</span> (unknown.<span class="property">length</span>) <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`WARN: not yet tracked by backend (kept in normal group): <span class="subst">$&#123;unknown.join(<span class="string">&#x27;, &#x27;</span>)&#125;</span>`</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">main</span>().<span class="title function_">catch</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123; <span class="variable language_">console</span>.<span class="title function_">error</span>(e); process.<span class="title function_">exit</span>(<span class="number">1</span>); &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>设计要点</strong>：</p>
+<ul>
+<li>链接先 <code>norm()</code>（去尾部斜杠）再匹配，避免 <code>https://a.com/</code> 和 <code>https://a.com</code> 对不上</li>
+<li>后端不认识的友链（<code>!known</code>）保守留在正常组，等后端下次抓取</li>
+<li>后端 API 不可达时直接退出不改文件，绝不误删数据</li>
+</ul>
+<h2 id="三、Workflow：friend-check-yml"><a href="#三、Workflow：friend-check-yml" class="headerlink" title="三、Workflow：friend-check.yml"></a>三、Workflow：friend-check.yml</h2><p>位置：<code>.github/workflows/friend-check.yml</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Friend</span> <span class="string">Check</span> <span class="string">&amp;</span> <span class="string">Deploy</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">schedule:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&#x27;0 4 * * *&#x27;</span>        <span class="comment"># 每天 UTC 04:00（北京时间 12:00）</span></span><br><span class="line">  <span class="attr">workflow_dispatch:</span>            <span class="comment"># 手动触发</span></span><br><span class="line"></span><br><span class="line"><span class="attr">permissions:</span></span><br><span class="line">  <span class="attr">contents:</span> <span class="string">write</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">check:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">outputs:</span></span><br><span class="line">      <span class="attr">changed:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.check.outputs.changed</span> <span class="string">&#125;&#125;</span>   <span class="comment"># ⚠️ 必须声明，否则下游读不到</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">        <span class="attr">with:</span> &#123; <span class="attr">node-version:</span> <span class="string">&#x27;20&#x27;</span> &#125;</span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">js-yaml</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">install</span> <span class="string">--no-save</span> <span class="string">js-yaml</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Run</span> <span class="string">friend</span> <span class="string">check</span></span><br><span class="line">        <span class="attr">id:</span> <span class="string">check</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          node friend-check/friend-check.js</span></span><br><span class="line"><span class="string">          if [ -n &quot;$(git status --porcelain source/_data/link.yml)&quot; ]; then</span></span><br><span class="line"><span class="string">            echo &quot;changed=true&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;</span></span><br><span class="line"><span class="string">          else</span></span><br><span class="line"><span class="string">            echo &quot;changed=false&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;</span></span><br><span class="line"><span class="string">          fi</span></span><br><span class="line"><span class="string"></span>      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Commit</span> <span class="string">and</span> <span class="string">push</span> <span class="string">classified</span> <span class="string">friends</span></span><br><span class="line">        <span class="attr">if:</span> <span class="string">steps.check.outputs.changed</span> <span class="string">==</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          git config user.name &quot;friend-check[bot]&quot;</span></span><br><span class="line"><span class="string">          git config user.email &quot;friend-check[bot]@users.noreply.github.com&quot;</span></span><br><span class="line"><span class="string">          git add source/_data/link.yml</span></span><br><span class="line"><span class="string">          git commit -m &quot;chore: auto-classify friends by availability&quot;</span></span><br><span class="line"><span class="string">          git push</span></span><br><span class="line"><span class="string"></span></span><br><span class="line">  <span class="attr">deploy:</span></span><br><span class="line">    <span class="attr">needs:</span> <span class="string">check</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">if:</span> <span class="string">needs.check.outputs.changed</span> <span class="string">==</span> <span class="string">&#x27;true&#x27;</span>       <span class="comment"># 只有真的变化才部署</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">        <span class="attr">with:</span> &#123; <span class="attr">node-version:</span> <span class="string">&#x27;20&#x27;</span>, <span class="attr">cache:</span> <span class="string">&#x27;npm&#x27;</span> &#125;</span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">dependencies</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npm</span> <span class="string">ci</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Build</span> <span class="string">site</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">npx</span> <span class="string">hexo</span> <span class="string">generate</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">to</span> <span class="string">GitHub</span> <span class="string">Pages</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="attr">PAT:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.PAT</span> <span class="string">&#125;&#125;</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          if [ -z &quot;$PAT&quot; ]; then</span></span><br><span class="line"><span class="string">            echo &quot;::warning::PAT secret not configured, skipping deploy&quot;</span></span><br><span class="line"><span class="string">            exit 0</span></span><br><span class="line"><span class="string">          fi</span></span><br><span class="line"><span class="string">          cd public</span></span><br><span class="line"><span class="string">          git init</span></span><br><span class="line"><span class="string">          git branch -m main                       # ⚠️ 见坑 2</span></span><br><span class="line"><span class="string">          git config user.name &quot;friend-check[bot]&quot;</span></span><br><span class="line"><span class="string">          git config user.email &quot;friend-check[bot]@users.noreply.github.com&quot;</span></span><br><span class="line"><span class="string">          git add -A</span></span><br><span class="line"><span class="string">          git commit -m &quot;deploy: update friends (auto)&quot;</span></span><br><span class="line"><span class="string">          git push -f &quot;https://x-access-token:$&#123;PAT&#125;@github.com/orchidsd/orchidsd.github.io.git&quot; main</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、三个真实的坑（已修复）"><a href="#四、三个真实的坑（已修复）" class="headerlink" title="四、三个真实的坑（已修复）"></a>四、三个真实的坑（已修复）</h2><h3 id="坑-1：job-没暴露-outputs，deploy-永远被跳过"><a href="#坑-1：job-没暴露-outputs，deploy-永远被跳过" class="headerlink" title="坑 1：job 没暴露 outputs，deploy 永远被跳过"></a>坑 1：job 没暴露 outputs，deploy 永远被跳过</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">outputs:</span></span><br><span class="line">  <span class="attr">changed:</span> <span class="string">$&#123;&#123;</span> <span class="string">steps.check.outputs.changed</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>GitHub Actions 里 <strong>job 级别的 <code>outputs</code> 必须显式声明</strong>，否则 <code>needs.check.outputs.changed</code> 一直是空，<code>deploy</code> job 的 <code>if</code> 永远不成立。</p>
+<p><strong>症状</strong>：check 明明检测到变化并提交了，但 deploy job 显示 <code>skipped</code>。</p>
+<h3 id="坑-2：git-init-默认分支是-master，push-main-失败"><a href="#坑-2：git-init-默认分支是-master，push-main-失败" class="headerlink" title="坑 2：git init 默认分支是 master，push main 失败"></a>坑 2：git init 默认分支是 master，push main 失败</h3><p>Actions runner 上 <code>git init</code> 创建的仓库默认分支是 <code>master</code>，而 push 指定 <code>main</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: src refspec main does not match any</span><br></pre></td></tr></table></figure>
+
+<p><strong>修复</strong>：<code>git init</code> 后加 <code>git branch -m main</code>。</p>
+<h3 id="坑-3：用-HTTP-探测被站点屏蔽（GitHub-Actions-IP）"><a href="#坑-3：用-HTTP-探测被站点屏蔽（GitHub-Actions-IP）" class="headerlink" title="坑 3：用 HTTP 探测被站点屏蔽（GitHub Actions IP）"></a>坑 3：用 HTTP 探测被站点屏蔽（GitHub Actions IP）</h3><p>第一版脚本直接请求友链域名，<code>akilar.top</code> 这类对数据中心 IP 有防护的站点全部”假失联”。<strong>改成读后端 error 字段后彻底解决</strong>（后端 Vercel 环境访问无限制）。</p>
+<h2 id="五、PAT-Secret-配置"><a href="#五、PAT-Secret-配置" class="headerlink" title="五、PAT Secret 配置"></a>五、PAT Secret 配置</h2><p><code>deploy</code> job 用 PAT（Personal Access Token）把 public&#x2F; 推到部署产物仓库：</p>
+<ol>
+<li>GitHub → Settings → Developer settings → Personal access tokens → <strong>Fine-grained tokens</strong></li>
+<li>勾选 <code>orchidsd.github.io</code> 仓库的 <strong>Contents: Read and write</strong></li>
+<li>博客仓库 → Settings → Secrets and variables → Actions → New repository secret</li>
+<li>Name：<code>PAT</code>，Value：粘贴 token</li>
+</ol>
+<h2 id="六、验证全链路"><a href="#六、验证全链路" class="headerlink" title="六、验证全链路"></a>六、验证全链路</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动触发一次</span></span><br><span class="line">gh workflow run -R orchidsd/hexo-blog friend-check.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 观察 run</span></span><br><span class="line">gh run list -R orchidsd/hexo-blog --workflow friend-check.yml</span><br></pre></td></tr></table></figure>
+
+<p><strong>期望输出</strong>：</p>
+<ul>
+<li><code>check</code> job：<code>classified: 11, normal: 11, lost: 0</code></li>
+<li>无变化时 <code>deploy</code> skipped；有变化时 <code>deploy</code> success</li>
+<li>线上 <code>/link/</code> 24 小时内反映新分组</li>
+</ul>
+<h2 id="七、真实故障演练记录"><a href="#七、真实故障演练记录" class="headerlink" title="七、真实故障演练记录"></a>七、真实故障演练记录</h2><p>这套流程在实战中跑通过完整闭环：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Akilar 真实失联（后端判定）</td>
+<td>✅ 自动移入失联组</td>
+</tr>
+<tr>
+<td>模拟 kmar.top 失效</td>
+<td>✅ 自动移入失联组</td>
+</tr>
+<tr>
+<td>kmar.top 恢复</td>
+<td>✅ 自动移回正常组</td>
+</tr>
+<tr>
+<td>Akilar 恢复（后端 error&#x3D;0）</td>
+<td>✅ 自动归位</td>
+</tr>
+<tr>
+<td>deploy 推送 orchidsd.github.io</td>
+<td>✅ <code>deploy: update friends (auto)</code></td>
+</tr>
+<tr>
+<td>CF 自动上线</td>
+<td>✅ 部署历史可见</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>下一篇：朋友圈页面的”失联 N”统计是怎么显示出来的。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/baitian/file_6574840.webp" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/baitian/file_6574840.webp" title="头像" alt="头像"></a><div class="post-copyright__author_name">Yoki</div><div class="post-copyright__author_desc"></div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/')">友链自动检测与自动部署（GitHub Actions）</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://img.weiguang.eu.org/file/1777546378454_merged-payment-qr.webp" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=友链自动检测与自动部署（GitHub Actions）&amp;url=https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/&amp;pic=/img/default_cover.jpg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.weiguang.eu.org" target="_blank">Yokiの小站</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/Hexo/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Hexo<span class="tagsPageCount">25</span></a><a class="post-meta__box__tags" href="/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>系列教程<span class="tagsPageCount">11</span></a><a class="post-meta__box__tags" href="/tags/GitHub-Actions/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>GitHub Actions<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>自动化<span class="tagsPageCount">1</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/img/default_cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2026/07/31/friend-circle-series/03-backend/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">后端部署：hexo-circle-of-friends（Vercel + fork）</div></div></a></div><div class="next-post pull-right"><a href="/2026/07/31/friend-circle-series/05-lost-contact-stat/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">朋友圈失联统计显示（前端注入）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2026/08/09/music-player-series/00-series-index/" title="anzhiyu 音乐播放器深度魔改系列 — 导航目录"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-08-09</div><div class="title">anzhiyu 音乐播放器深度魔改系列 — 导航目录</div></div></a></div><div><a href="/2026/07/31/hexo-anzhiyu-series/04-theme-upgrade-patch/" title="安知鱼主题升级与 Patch 归档策略"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-07-31</div><div class="title">安知鱼主题升级与 Patch 归档策略</div></div></a></div><div><a href="/2026/07/31/friend-circle-series/06-troubleshooting/" title="踩坑与问题排查实录"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-07-31</div><div class="title">踩坑与问题排查实录</div></div></a></div><div><a href="/2026/07/31/friend-circle-series/05-lost-contact-stat/" title="朋友圈失联统计显示（前端注入）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-07-31</div><div class="title">朋友圈失联统计显示（前端注入）</div></div></a></div><div><a href="/2026/07/31/friend-circle-series/03-backend/" title="后端部署：hexo-circle-of-friends（Vercel + fork）"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-07-31</div><div class="title">后端部署：hexo-circle-of-friends（Vercel + fork）</div></div></a></div><div><a href="/2026/07/31/friend-circle-series/02-fcircle-page/" title="朋友圈（FriendCircle）页面搭建"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-07-31</div><div class="title">朋友圈（FriendCircle）页面搭建</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)" role="button">匿名评论</a></div><div class="comment-switch"><span class="first-comment comment-switch-item"><i class="anzhiyufont anzhiyu-icon-comments comment-switch-icon"></i>Twikoo</span><span id="switch-btn"></span><span class="second-comment comment-switch-item"><i class="anzhiyufont anzhiyu-icon-comments comment-switch-icon"></i>Waline</span></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="waline-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info__sayhi" id="author-info__sayhi" onclick="anzhiyu.changeSayHelloText()"></div><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/baitian/file_6574840.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-status"><img class="g-status" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/baitian/file_6574879.webp" alt="status"/></div></div><div class="author-info__description">记录学习和生活的点点滴滴</div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">Yoki</h1><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/orchidsd" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="social-icon faa-parent animated-hover" href="https://space.bilibili.com/445601416" target="_blank" title="BiliBili"><i class="anzhiyufont anzhiyu-icon-bilibili"></i></a></div></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bullhorn anzhiyu-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来看我的博客鸭~</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage">11</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%9B%AE%E6%A0%87"><span class="toc-number">1.</span> <span class="toc-text">一、目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A3%80%E6%B5%8B%E8%84%9A%E6%9C%AC-friend-check-js"><span class="toc-number">2.</span> <span class="toc-text">二、检测脚本 friend-check.js</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E2%80%9D%E5%90%8E%E7%AB%AF-error%E2%80%9D%E8%80%8C%E4%B8%8D%E6%98%AF%E8%87%AA%E5%B7%B1%E6%8E%A2%E6%B5%8B"><span class="toc-number">2.1.</span> <span class="toc-text">为什么用”后端 error”而不是自己探测</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Workflow%EF%BC%9Afriend-check-yml"><span class="toc-number">3.</span> <span class="toc-text">三、Workflow：friend-check.yml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%89%E4%B8%AA%E7%9C%9F%E5%AE%9E%E7%9A%84%E5%9D%91%EF%BC%88%E5%B7%B2%E4%BF%AE%E5%A4%8D%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">四、三个真实的坑（已修复）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%91-1%EF%BC%9Ajob-%E6%B2%A1%E6%9A%B4%E9%9C%B2-outputs%EF%BC%8Cdeploy-%E6%B0%B8%E8%BF%9C%E8%A2%AB%E8%B7%B3%E8%BF%87"><span class="toc-number">4.1.</span> <span class="toc-text">坑 1：job 没暴露 outputs，deploy 永远被跳过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%91-2%EF%BC%9Agit-init-%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF%E6%98%AF-master%EF%BC%8Cpush-main-%E5%A4%B1%E8%B4%A5"><span class="toc-number">4.2.</span> <span class="toc-text">坑 2：git init 默认分支是 master，push main 失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%91-3%EF%BC%9A%E7%94%A8-HTTP-%E6%8E%A2%E6%B5%8B%E8%A2%AB%E7%AB%99%E7%82%B9%E5%B1%8F%E8%94%BD%EF%BC%88GitHub-Actions-IP%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">坑 3：用 HTTP 探测被站点屏蔽（GitHub Actions IP）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81PAT-Secret-%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">五、PAT Secret 配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%AA%8C%E8%AF%81%E5%85%A8%E9%93%BE%E8%B7%AF"><span class="toc-number">6.</span> <span class="toc-text">六、验证全链路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%9C%9F%E5%AE%9E%E6%95%85%E9%9A%9C%E6%BC%94%E7%BB%83%E8%AE%B0%E5%BD%95"><span class="toc-number">7.</span> <span class="toc-text">七、真实故障演练记录</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/08/12/blog-maintenance-ci-comments/" title="博客工程维护复盘：CI 收敛与评论图片放大双 Bug 修复实录"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="博客工程维护复盘：CI 收敛与评论图片放大双 Bug 修复实录"/></a><div class="content"><a class="title" href="/2026/08/12/blog-maintenance-ci-comments/" title="博客工程维护复盘：CI 收敛与评论图片放大双 Bug 修复实录">博客工程维护复盘：CI 收敛与评论图片放大双 Bug 修复实录</a><time datetime="2026-08-12T00:00:00.000Z" title="发表于 2026-08-12 08:00:00">2026-08-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/09/writing-tutorial-methodology/" title="优质教程博文怎么写？从 web.dev、DigitalOcean、freeCodeCamp 提炼的编写结构与流程"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="优质教程博文怎么写？从 web.dev、DigitalOcean、freeCodeCamp 提炼的编写结构与流程"/></a><div class="content"><a class="title" href="/2026/08/09/writing-tutorial-methodology/" title="优质教程博文怎么写？从 web.dev、DigitalOcean、freeCodeCamp 提炼的编写结构与流程">优质教程博文怎么写？从 web.dev、DigitalOcean、freeCodeCamp 提炼的编写结构与流程</a><time datetime="2026-08-09T10:00:00.000Z" title="发表于 2026-08-09 18:00:00">2026-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/09/waline-series/02-worker-proxy/" title="Waline 评论图片上传系列（二）：Cloudflare Worker 代理上传——Token 移出前端与安全防护"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Waline 评论图片上传系列（二）：Cloudflare Worker 代理上传——Token 移出前端与安全防护"/></a><div class="content"><a class="title" href="/2026/08/09/waline-series/02-worker-proxy/" title="Waline 评论图片上传系列（二）：Cloudflare Worker 代理上传——Token 移出前端与安全防护">Waline 评论图片上传系列（二）：Cloudflare Worker 代理上传——Token 移出前端与安全防护</a><time datetime="2026-08-09T09:00:00.000Z" title="发表于 2026-08-09 17:00:00">2026-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/09/waline-series/01-imgbed-upload/" title="Waline 评论图片上传系列（一）：Waline + CloudFlare ImgBed 图床配置（整理版）"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Waline 评论图片上传系列（一）：Waline + CloudFlare ImgBed 图床配置（整理版）"/></a><div class="content"><a class="title" href="/2026/08/09/waline-series/01-imgbed-upload/" title="Waline 评论图片上传系列（一）：Waline + CloudFlare ImgBed 图床配置（整理版）">Waline 评论图片上传系列（一）：Waline + CloudFlare ImgBed 图床配置（整理版）</a><time datetime="2026-08-09T08:30:00.000Z" title="发表于 2026-08-09 16:30:00">2026-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/08/09/waline-series/00-series-index/" title="Waline 评论图片上传系列 — 导航目录"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Waline 评论图片上传系列 — 导航目录"/></a><div class="content"><a class="title" href="/2026/08/09/waline-series/00-series-index/" title="Waline 评论图片上传系列 — 导航目录">Waline 评论图片上传系列 — 导航目录</a><time datetime="2026-08-09T08:00:00.000Z" title="发表于 2026-08-09 16:00:00">2026-08-09</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="mailto:weiguang111111@gmail.com" title="email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a><a class="deal_link" href="/atom.xml" title="RSS"><i class="anzhiyufont anzhiyu-icon-rss"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://twikoo-magic.oss-cn-hangzhou.aliyuncs.com/baitian/file_6574840.webp" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/orchidsd" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a><a class="deal_link" href="/copyright" title="CC"><i class="anzhiyufont anzhiyu-icon-copyright-line"></i></a></div><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-上班摸鱼中.svg" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div><div id="anzhiyu-footer"><div class="footer-group"><div class="footer-title">服务</div><div class="footer-links"><a class="footer-item" title="51la统计" target="_blank" rel="noopener" href="https://v6.51.la/">51la统计</a><a class="footer-item" title="十年之约" target="_blank" rel="noopener" href="https://www.foreverblog.cn/">十年之约</a><a class="footer-item" title="开往" target="_blank" rel="noopener" href="https://github.com/travellings-link/travellings">开往</a></div></div><div class="footer-group"><div class="footer-title">主题</div><div class="footer-links"><a class="footer-item" title="文档" target="_blank" rel="noopener" href="https://docs.anheyu.com/">文档</a><a class="footer-item" title="源码" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu">源码</a><a class="footer-item" title="更新日志" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu/releases">更新日志</a></div></div><div class="footer-group"><div class="footer-title">导航</div><div class="footer-links"><a class="footer-item" title="即刻短文" href="/essay/">即刻短文</a><a class="footer-item" title="友链文章" href="/fcircle/">友链文章</a><a class="footer-item" title="留言板" href="/comments/">留言板</a></div></div><div class="footer-group"><div class="footer-title">协议</div><div class="footer-links"><a class="footer-item" title="隐私协议" href="/privacy/">隐私协议</a><a class="footer-item" title="Cookies" href="/cookies/">Cookies</a><a class="footer-item" title="版权协议" href="/copyright/">版权协议</a></div></div><div class="footer-group"><div class="footer-title-group"><div class="footer-title">友链</div><a class="random-friends-btn" id="footer-random-friends-btn" href="javascript:addFriendLinksInFooter();" title="换一批友情链接"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right"></i></a></div><div class="footer-links" id="friend-links-in-footer"></div></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v8.1.1" title="博客框架为Hexo_v8.1.1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v8.1.1"/></a><a class="github-badge" target="_blank" href="https://hexo.anheyu.com/" style="margin-inline:5px" data-title="本站使用AnZhiYu主题" title="本站使用AnZhiYu主题"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.9/img/Theme-AnZhiYu-2E67D3.svg" alt="本站使用AnZhiYu主题"/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title="本站项目由Github托管"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Source-Github.svg" alt="本站项目由Github托管"/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg" alt="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"/></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2026 By <a class="footer-bar-link" href="/" title="Yoki" target="_blank">Yoki</a></div></div><div id="footer-type-tips"></div><div class="js-pjax"><script>function subtitleType () {
+  fetch('https://v1.hitokoto.cn')
+    .then(response => response.json())
+    .then(data => {
+      if (true) {
+        const from = '出自 ' + data.from
+        const sub = ["生活明朗&#44; 万物可爱&#44; 人间值得&#44; 未来可期."]
+        sub.unshift(data.hitokoto, from)
+        window.typed = new Typed('#footer-type-tips', {
+          strings: sub,
+          startDelay: 300,
+          typeSpeed: 150,
+          loop: true,
+          backSpeed: 50,
+        })
+      } else {
+        document.getElementById('footer-type-tips').innerHTML = data.hitokoto
+      }
+    })
+}
+
+if (true) {
+  if (typeof Typed === 'function') {
+    subtitleType()
+  } else {
+    getScript('https://cdn.cbd.int/typed.js@2.1.0/dist/typed.umd.js').then(subtitleType)
+  }
+} else {
+  subtitleType()
+}
+</script></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a><a class="footer-bar-link" target="_blank" rel="noopener" href="https://img.weiguang.eu.org" title="图床">图床</a><a class="footer-bar-link cc" href="/copyright" title="CC协议"><i class="anzhiyufont anzhiyu-icon-copyright-line"></i><i class="anzhiyufont anzhiyu-icon-creative-commons-by-line"></i><i class="anzhiyufont anzhiyu-icon-creative-commons-nc-line"></i><i class="anzhiyufont anzhiyu-icon-creative-commons-nd-line"></i></a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">5</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式" aria-label="显示模式" role="button"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" href="https://blog.weiguang.eu.org/" title="我的博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">我的博客</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://hexo.anheyu.com/" title="安知鱼博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">安知鱼博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://img.weiguang.eu.org/" title="Yokiの图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">Yokiの图床</span></a><a class="back-menu-item" target="_blank" rel="noopener" href="https://image.anheyu.com/" title="安知鱼图床"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/siteicon/manifest-icon-192.maskable.png" alt="" width="32" height="32"/><span class="back-menu-item-text">安知鱼图床</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="文章" role="button"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 隧道</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="友链" role="button"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/link/"><i class="anzhiyufont anzhiyu-icon-link faa-tada" style="font-size: 0.9em;"></i><span> 友人帐</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/fcircle/"><i class="anzhiyufont anzhiyu-icon-artstation faa-tada" style="font-size: 0.9em;"></i><span> 朋友圈</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="我的" role="button"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/music/"><i class="anzhiyufont anzhiyu-icon-music faa-tada" style="font-size: 0.9em;"></i><span> 音乐馆</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/bangumis/"><i class="anzhiyufont anzhiyu-icon-bilibili faa-tada" style="font-size: 0.9em;"></i><span> 追番页</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);" aria-label="关于" role="button"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/AI-%E6%91%98%E8%A6%81/" style="font-size: 0.88rem;">AI 摘要<sup>1</sup></a><a href="/tags/CI-CD/" style="font-size: 0.88rem;">CI/CD<sup>4</sup></a><a href="/tags/Cloudflare-Pages/" style="font-size: 0.88rem;">Cloudflare Pages<sup>1</sup></a><a href="/tags/Cloudflare-Workers/" style="font-size: 0.88rem;">Cloudflare Workers<sup>1</sup></a><a href="/tags/FriendCircle/" style="font-size: 0.88rem;">FriendCircle<sup>4</sup></a><a href="/tags/GitHub-Actions/" style="font-size: 0.88rem;">GitHub Actions<sup>2</sup></a><a href="/tags/Hexo/" style="font-size: 0.88rem;">Hexo<sup>25</sup></a><a href="/tags/Rust/" style="font-size: 0.88rem;">Rust<sup>1</sup></a><a href="/tags/Twikoo/" style="font-size: 0.88rem;">Twikoo<sup>1</sup></a><a href="/tags/Waline/" style="font-size: 0.88rem;">Waline<sup>4</sup></a><a href="/tags/anzhiyu/" style="font-size: 0.88rem;">anzhiyu<sup>21</sup></a><a href="/tags/git/" style="font-size: 0.88rem;">git<sup>1</sup></a><a href="/tags/%E4%B8%BB%E9%A2%98/" style="font-size: 0.88rem;">主题<sup>1</sup></a><a href="/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/" style="font-size: 0.88rem;">主题定制<sup>2</sup></a><a href="/tags/%E5%86%99%E4%BD%9C/" style="font-size: 0.88rem;">写作<sup>1</sup></a><a href="/tags/%E5%8D%87%E7%BA%A7/" style="font-size: 0.88rem;">升级<sup>1</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" style="font-size: 0.88rem;">博客搭建<sup>3</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E8%BF%90%E8%90%A5/" style="font-size: 0.88rem;">博客运营<sup>1</sup></a><a href="/tags/%E5%8F%8B%E9%93%BE/" style="font-size: 0.88rem;">友链<sup>2</sup></a><a href="/tags/%E5%9B%BE%E5%BA%8A/" style="font-size: 0.88rem;">图床<sup>2</sup></a><a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 0.88rem;">安全<sup>2</sup></a><a href="/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/" style="font-size: 0.88rem;">安知鱼<sup>1</sup></a><a href="/tags/%E5%BA%95%E9%83%A8%E6%A0%8F/" style="font-size: 0.88rem;">底部栏<sup>1</sup></a><a href="/tags/%E6%8E%92%E9%94%99/" style="font-size: 0.88rem;">排错<sup>1</sup></a><a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 0.88rem;">教程<sup>12</sup></a><a href="/tags/%E6%9D%82%E9%A1%B9%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">杂项配置<sup>1</sup></a><a href="/tags/%E7%94%BB%E5%BB%8A/" style="font-size: 0.88rem;">画廊<sup>1</sup></a><a href="/tags/%E7%9B%B8%E5%86%8C/" style="font-size: 0.88rem;">相册<sup>1</sup></a><a href="/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/" style="font-size: 0.88rem;">系列教程<sup>11</sup></a><a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="font-size: 0.88rem;">统计分析<sup>1</sup></a><a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" style="font-size: 0.88rem;">自动化<sup>1</sup></a><a href="/tags/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">评论系统<sup>2</sup></a><a href="/tags/%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/" style="font-size: 0.88rem;">音乐播放器<sup>4</sup></a></div></div><hr/></div></div><div id="keyboard-tips"><div class="keyboardTitle">博客快捷键</div><div class="keybordList"><div class="keybordItem"><div class="keyGroup"><div class="key">shift K</div></div><div class="keyContent"><div class="content">关闭快捷键功能</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift A</div></div><div class="keyContent"><div class="content">打开/关闭中控台</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift M</div></div><div class="keyContent"><div class="content">播放/暂停音乐</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift D</div></div><div class="keyContent"><div class="content">深色/浅色显示模式</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift S</div></div><div class="keyContent"><div class="content">站内搜索</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift R</div></div><div class="keyContent"><div class="content">随机访问</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift H</div></div><div class="keyContent"><div class="content">返回首页</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift F</div></div><div class="keyContent"><div class="content">友链鱼塘</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift L</div></div><div class="keyContent"><div class="content">友链页面</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift P</div></div><div class="keyContent"><div class="content">关于本站</div></div></div><div class="keybordItem"><div class="keyGroup"><div class="key">shift I</div></div><div class="keyContent"><div class="content">原版/本站右键菜单</div></div></div></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><a id="switch-commentBarrage" href="javascript:anzhiyu.switchCommentBarrage();" title="开关弹幕"><i class="anzhiyufont anzhiyu-icon-danmu"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><div id="nav-music-aplayer" data-volume="0.7"></div><button class="nav-music-expand-btn" type="button" title="展开/折叠" aria-label="展开或折叠播放器"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg></button></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="is-center" id="loading-database"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-pulse-icon"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/1755942982&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);" role="button"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);" role="button"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);" role="button"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);" role="button"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@6.1.6/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script>// 消除控制台打印
+var HoldLog = console.log;
+console.log = function () {};
+let now1 = new Date();
+queueMicrotask(() => {
+  const Log = function () {
+    HoldLog.apply(console, arguments);
+  }; //在恢复前输出日志
+  const grt = new Date("04/15/2026 00:00:00"); //此处修改你的建站时间或者网站上线时间
+  now1.setTime(now1.getTime() + 250);
+  const days = (now1 - grt) / 1000 / 60 / 60 / 24;
+  const dnum = Math.floor(days);
+  const ascll = [
+    `欢迎使用安知鱼!`,
+    `生活明朗, 万物可爱`,
+    `
+        
+       █████╗ ███╗   ██╗███████╗██╗  ██╗██╗██╗   ██╗██╗   ██╗
+      ██╔══██╗████╗  ██║╚══███╔╝██║  ██║██║╚██╗ ██╔╝██║   ██║
+      ███████║██╔██╗ ██║  ███╔╝ ███████║██║ ╚████╔╝ ██║   ██║
+      ██╔══██║██║╚██╗██║ ███╔╝  ██╔══██║██║  ╚██╔╝  ██║   ██║
+      ██║  ██║██║ ╚████║███████╗██║  ██║██║   ██║   ╚██████╔╝
+      ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝    ╚═════╝
+        
+        `,
+    "已上线",
+    dnum,
+    "天",
+    "©2026 By 安知鱼 V1.7.1",
+  ];
+  const ascll2 = [`NCC2-036`, `调用前置摄像头拍照成功，识别为【小笨蛋】.`, `Photo captured: `, `🤪`];
+
+  setTimeout(
+    Log.bind(
+      console,
+      `\n%c${ascll[0]} %c ${ascll[1]} %c ${ascll[2]} %c${ascll[3]}%c ${ascll[4]}%c ${ascll[5]}\n\n%c ${ascll[6]}\n`,
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      "color:#425AEF",
+      "",
+      "color:#425AEF",
+      ""
+    )
+  );
+  setTimeout(
+    Log.bind(
+      console,
+      `%c ${ascll2[0]} %c ${ascll2[1]} %c \n${ascll2[2]} %c\n${ascll2[3]}\n`,
+      "color:white; background-color:#4fd953",
+      "",
+      "",
+      'background:url("https://npm.elemecdn.com/anzhiyu-blog@1.1.6/img/post/common/tinggge.gif") no-repeat;font-size:450%'
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c WELCOME %c 你好，小笨蛋.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(
+      console,
+      "%c ⚡ Powered by 安知鱼 %c 你正在访问 Yoki 的博客.",
+      "color:white; background-color:#f0ad4e",
+      ""
+    )
+  );
+
+  setTimeout(Log.bind(console, "%c W23-12 %c 你已打开控制台.", "color:white; background-color:#4f90d9", ""));
+
+  setTimeout(
+    console.warn.bind(console, "%c S013-782 %c 你现在正处于监控中.", "color:white; background-color:#d9534f", "")
+  );
+});</script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("04/15/2026 00:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "https://npm.elemecdn.com/anzhiyu-blog@2.0.4/img/badge/安知鱼-下班啦.svg";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo.weiguang4.eu.org',
+      region: '',
+      onCommentLoaded: () => {
+        const v = document.getElementById('twikoo')?.__vue__
+        const twikooLightbox = !!(v && v.$twikoo && v.$twikoo.serverConfig && v.$twikoo.serverConfig.LIGHTBOX === 'true')
+        if (!twikooLightbox) anzhiyu.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+        const ta = document.querySelector('#twikoo .tk-input .el-textarea__inner, #twikoo textarea')
+        if (ta && !ta.getAttribute('aria-label')) ta.setAttribute('aria-label', ta.getAttribute('placeholder') || '评论内容')
+        document.querySelectorAll('#twikoo a[alt]:not([aria-label])').forEach(a => {
+          if (!a.textContent.trim()) a.setAttribute('aria-label', a.getAttribute('alt'))
+        })
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(runFn,0)
+    else getScript('https://cdn.cbd.int/twikoo@1.6.44/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  const runFn = () => {
+    init();
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if (!countELement) return
+    const run = () => {
+      twikoo.getCommentsCount({
+        envId: 'https://twikoo.weiguang4.eu.org',
+        region: '',
+        urls: [window.location.pathname],
+        includeReply: false
+      }).then(res => {
+        countELement.textContent = res[0].count
+      }).catch(err => {
+        console.error(err)
+      })
+    }
+    if (typeof twikoo === 'object') run()
+    else getScript('https://cdn.cbd.int/twikoo@1.6.44/dist/twikoo.all.min.js').then(run)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+
+  window.refreshCommentCount = getCount
+})()
+</script><script data-pjax="data-pjax">(() => {
+  GLOBAL_CONFIG_SITE.isPost && (window.pjax ? window.refreshCommentCount() : window.addEventListener('load', () => window.refreshCommentCount()))
+})()</script><script>(() => {
+  let initFn = window.walineFn || null
+
+  const bindWalineLightbox = () => {
+    const wrap = document.getElementById('waline-wrap')
+    if (!wrap || typeof anzhiyu === 'undefined' || !anzhiyu.loadLightbox) return
+    const apply = () => {
+      wrap.querySelectorAll('.wl-content img:not(.wl-emoji)').forEach(img => {
+        if (img.parentNode.tagName !== 'A') anzhiyu.loadLightbox([img])
+      })
+    }
+    apply()
+    new MutationObserver(apply).observe(wrap, { childList: true, subtree: true })
+  }
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cm.weiguang.eu.org/',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: true,
+      imageUploader: (file) => {
+  // 访客上传时弹出渠道选择（见 /js/waline-image-uploader.js，inject.bottom 注入）
+  // 以下为脚本未加载时的兜底：直接走默认渠道 discord
+  if (window.WalineImageUploader) {
+    return window.WalineImageUploader(file);
+  }
+  const formData = new FormData();
+  formData.append('file', file);
+  const searchParams = new URLSearchParams({ uploadChannel: 'discord' });
+
+  return fetch(`https://upload.weiguang.eu.org/upload?${searchParams}`, {
+    method: 'POST',
+    body: formData,
+  })
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok || !data?.[0]?.src) {
+        throw new Error(data?.error || '图片上传失败');
+      }
+
+      return `https://img.weiguang.eu.org${data[0].src}`;
+    });
+}
+,
+      reaction: true,
+      emoji: ["https://unpkg.com/@waline/emojis@1.4.0/weibo","https://unpkg.com/@waline/emojis@1.4.0/tieba","https://unpkg.com/@waline/emojis@1.4.0/bmoji","https://unpkg.com/@waline/emojis@1.4.0/tw-emoji"],
+      locale: {"placeholder":"分享你的想法吧~ 文明评论，让交流更有价值 ✨","sofa":"抢占沙发~来发评论吧~"},
+      pageSize: 10,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    bindWalineLightbox()
+
+    anzhiyu.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://cdn.cbd.int/@waline/client@3.8.0/dist/waline.css')
+      if (true) await getCSS('https://cdn.cbd.int/@waline/client@3.8.0/dist/waline-meta.css')
+      const { init } = await import('https://cdn.cbd.int/@waline/client@3.8.0/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Twikoo' === 'Waline' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"><script async src="/js/anzhiyu/comment_barrage.js"></script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.weiguang4.eu.org',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.cbd.int/twikoo@1.6.44/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'><div class='name'><span>${array[i].nick} </span></div></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <time datetime="${array[i].date}">${anzhiyu.diffDate(array[i].date, true)}</time></div>
+        </div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://cdn.cbd.int/qrcodejs@1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><script src="/js/music-index.js"></script><script src="/js/waline-image-uploader.js"></script><script>if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('/service-worker.js').then(r=>{console.log('SW registered:',r.scope)}).catch(e=>{console.error('SW registration failed:',e)})})}</script><script>document.addEventListener('DOMContentLoaded',()=>{const p=window.location.pathname;const cc=document.querySelector('.waline-comment-count');if(cc){fetch('https://cm.weiguang.eu.org/api/comment?type=count&url='+encodeURIComponent(p)).then(r=>r.json()).then(d=>{if(d&&d.data)cc.textContent=d.data[0]||0}).catch(()=>{})}const pv=document.querySelector('.waline-pageview-count');if(pv){fetch('https://cm.weiguang.eu.org/api/article?path='+encodeURIComponent(p)).then(r=>r.json()).then(d=>{if(d&&d.data){const v=Array.isArray(d.data)?d.data[0]?.time:d.data.pageview;if(v!==undefined)pv.textContent=v||0}}).catch(()=>{})}});</script><script src="/js/clock/clock-injector.js"></script><script id="click-show-text" src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/dist/click-show-text.min.js" data-mobile="false" data-text="I,LOVE,YOU" data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:type\"]","meta[property=\"og:site_name\"]","meta[property=\"og:description\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: true,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', 'G-DKWDY4MZ2F', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404')
+  }
+})</script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
