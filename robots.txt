@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /categories/
+Disallow: /tags/
+Disallow: /page/
+Disallow: /css/
+Disallow: /js/
+Disallow: /img/
+
+Sitemap: https://blog.weiguang.eu.org/sitemap.xml
