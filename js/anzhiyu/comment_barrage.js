@@ -97,7 +97,7 @@ if (document.querySelector(".comment-barrage")) {
             </a>
             <div class="barrageNick">${data.nick}</div>
             <img class="nolazyload barrageAvatar" src="https://cravatar.cn/avatar/${data.mailMd5}" alt=""/>
-            <a class="comment-barrage-close" href="javascript:anzhiyu.switchCommentBarrage()"><i class="anzhiyufont anzhiyu-icon-xmark"></i></a>
+            <a class="comment-barrage-close" href="javascript:anzhiyu.switchCommentBarrage()" aria-label="关闭弹幕" title="关闭弹幕"><i class="anzhiyufont anzhiyu-icon-xmark"></i></a>
           </div>
           <anzhiyu class="barrageContent" onClick="window.location.hash = '${data.id}'">
             ${data.comment}

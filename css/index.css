@@ -23823,6 +23823,17 @@ html[data-theme="dark"] a.categoryButton.green {
   opacity: 1;
 }
 
+/* 16. 暗色 code 底：--anzhiyu-code-stress 直接跟随 --anzhiyu-main（_global/index.styl:74），
+ *     而暗色默认 main 是亮金 #f2b94b，配 code_foreground #fff 只有 1.78。
+ *     运行期 colorThief 会先 LightenDarkenColor 把主色压暗再用（main.js:1396），
+ *     说明「主色够暗才配得上白字」本就是这套配色的不变量，只是静态默认值没守住；
+ *     axe 抓的正是 JS 介入前的初始态，稳态（实测 #816350 白字 5.48）本来是过的。
+ *     暗色下把 code 底固定为同色相压暗的金 #99690B（白字 4.82）：只影响 code 芯片，
+ *     不动品牌主色。代价是暗色下 code 底不再跟随封面取色，这个取舍是划算的。 */
+[data-theme="dark"] {
+  --anzhiyu-code-stress: #99690b;
+}
+
 #page:has(#lib-cards):has(#libCategories) #post-comment .tk-comments-container > .tk-comment {
   border: none;
   box-shadow: none;
