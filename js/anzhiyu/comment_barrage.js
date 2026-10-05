@@ -1,13 +1,179 @@
-if(document.querySelector(".comment-barrage")){let c=function(){if(commentBarrageConfig.dom){var e=JSON.stringify({event:"COMMENT_GET",accessToken:commentBarrageConfig.accessToken,url:commentBarrageConfig.pageUrl}),t=new XMLHttpRequest;t.withCredentials=!0,t.addEventListener("readystatechange",function(){this.readyState===4&&this.responseText&&(commentBarrageConfig.barrageList=i(JSON.parse(this.responseText).data),commentBarrageConfig.dom.innerHTML="")}),t.open("POST",commentBarrageConfig.twikooUrl),t.setRequestHeader("Content-Type","application/json"),t.send(e),clearInterval(commentInterval),commentInterval=null,commentInterval=setInterval(()=>{commentBarrageConfig.barrageList.length&&!hoverOnCommentBarrage&&(o(commentBarrageConfig.barrageList[commentBarrageConfig.barrageIndex]),commentBarrageConfig.barrageIndex+=1,commentBarrageConfig.barrageIndex%=commentBarrageConfig.barrageList.length),commentBarrageConfig.barrageTimer.length>(commentBarrageConfig.barrageList.length>commentBarrageConfig.maxBarrage?commentBarrageConfig.maxBarrage:commentBarrageConfig.barrageList.length)&&!hoverOnCommentBarrage&&d(commentBarrageConfig.barrageTimer.shift())},commentBarrageConfig.barrageTime)}},i=function(e){e.sort((a,s)=>a.created-s.created);let t=[];return e.forEach(a=>{t.push(...l(a))}),t},l=function(e){if(e.replies){let t=[e];return e.replies.forEach(a=>{t.push(...l(a))}),t}else return[]},o=function(e){let t=document.createElement("div");t.className="comment-barrage-item",t.innerHTML=`
+if (document.querySelector(".comment-barrage")) {
+  var commentBarrageConfig = {
+    maxBarrage: GLOBAL_CONFIG.commentBarrageConfig.maxBarrage,
+    barrageTime: GLOBAL_CONFIG.commentBarrageConfig.barrageTime,
+    twikooUrl: GLOBAL_CONFIG.twikooEnvId,
+    accessToken: GLOBAL_CONFIG.commentBarrageConfig.accessToken,
+    mailMd5: GLOBAL_CONFIG.commentBarrageConfig.mailMd5,
+    pageUrl: window.location.pathname,
+    barrageTimer: [],
+    barrageList: [],
+    barrageIndex: 0,
+    dom: document.querySelector(".comment-barrage"),
+  };
+  var commentInterval = null;
+  var hoverOnCommentBarrage = false;
+
+  document.querySelector(".comment-barrage").addEventListener("mouseenter", function () {
+    hoverOnCommentBarrage = true;
+  });
+  document.querySelector(".comment-barrage").addEventListener("mouseleave", function () {
+    hoverOnCommentBarrage = false;
+  });
+
+  function initCommentBarrage() {
+    if (!commentBarrageConfig.dom) return;
+
+    var data = JSON.stringify({
+      event: "COMMENT_GET",
+      accessToken: commentBarrageConfig.accessToken,
+      url: commentBarrageConfig.pageUrl,
+    });
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+      if (this.readyState === 4 && this.responseText) {
+        commentBarrageConfig.barrageList = commentLinkFilter(JSON.parse(this.responseText).data);
+        commentBarrageConfig.dom.innerHTML = "";
+      }
+    });
+    xhr.open("POST", commentBarrageConfig.twikooUrl);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(data);
+
+    clearInterval(commentInterval);
+    commentInterval = null;
+
+    commentInterval = setInterval(() => {
+      if (commentBarrageConfig.barrageList.length && !hoverOnCommentBarrage) {
+        popCommentBarrage(commentBarrageConfig.barrageList[commentBarrageConfig.barrageIndex]);
+        commentBarrageConfig.barrageIndex += 1;
+        commentBarrageConfig.barrageIndex %= commentBarrageConfig.barrageList.length;
+      }
+      if (
+        commentBarrageConfig.barrageTimer.length >
+          (commentBarrageConfig.barrageList.length > commentBarrageConfig.maxBarrage
+            ? commentBarrageConfig.maxBarrage
+            : commentBarrageConfig.barrageList.length) &&
+        !hoverOnCommentBarrage
+      ) {
+        removeCommentBarrage(commentBarrageConfig.barrageTimer.shift());
+      }
+    }, commentBarrageConfig.barrageTime);
+  }
+
+  function commentLinkFilter(data) {
+    data.sort((a, b) => {
+      return a.created - b.created;
+    });
+    let newData = [];
+    data.forEach(item => {
+      newData.push(...getCommentReplies(item));
+    });
+    return newData;
+  }
+
+  function getCommentReplies(item) {
+    if (item.replies) {
+      let replies = [item];
+      item.replies.forEach(item => {
+        replies.push(...getCommentReplies(item));
+      });
+      return replies;
+    } else {
+      return [];
+    }
+  }
+
+  function popCommentBarrage(data) {
+    let barrage = document.createElement("div");
+    barrage.className = "comment-barrage-item";
+    barrage.innerHTML = `
           <div class="barrageHead">
-            <a class="barrageTitle ${e.mailMd5===commentBarrageConfig.mailMd5?"barrageBloggerTitle":""}" href="javascript:anzhiyu.scrollTo('#post-comment')"">
-              ${e.mailMd5===commentBarrageConfig.mailMd5?"\u535A\u4E3B":"\u70ED\u8BC4"}
+            <a class="barrageTitle ${
+              data.mailMd5 === commentBarrageConfig.mailMd5 ? "barrageBloggerTitle" : ""
+            }" href="javascript:anzhiyu.scrollTo('#post-comment')"">
+              ${data.mailMd5 === commentBarrageConfig.mailMd5 ? "博主" : "热评"}
             </a>
-            <div class="barrageNick">${e.nick}</div>
-            <img class="nolazyload barrageAvatar" src="https://cravatar.cn/avatar/${e.mailMd5}"/>
+            <div class="barrageNick">${data.nick}</div>
+            <img class="nolazyload barrageAvatar" src="https://cravatar.cn/avatar/${data.mailMd5}" alt=""/>
             <a class="comment-barrage-close" href="javascript:anzhiyu.switchCommentBarrage()"><i class="anzhiyufont anzhiyu-icon-xmark"></i></a>
           </div>
-          <anzhiyu class="barrageContent" onClick="window.location.hash = '${e.id}'">
-            ${e.comment}
+          <anzhiyu class="barrageContent" onClick="window.location.hash = '${data.id}'">
+            ${data.comment}
           </anzhiyu>
-        `,t.querySelectorAll("anzhiyu pre").forEach(r=>{let n=document.createElement("span");n.innerText="\u3010\u4EE3\u7801\u3011",r.parentNode.replaceChild(n,r)}),t.querySelectorAll("anzhiyu img").forEach(r=>{if(!r.classList.contains("tk-owo-emotion")){r.style.display="none";let n=document.createElement("span");n.innerText="\u3010\u56FE\u7247\u3011",r.parentNode.replaceChild(n,r)}}),commentBarrageConfig.barrageTimer.push(t),commentBarrageConfig.dom.append(t)},d=function(e){e.className="comment-barrage-item out",setTimeout(()=>{commentBarrageConfig.dom&&commentBarrageConfig.dom.contains(e)&&commentBarrageConfig.dom.removeChild(e)},1e3)};var initCommentBarrage=c,commentLinkFilter=i,getCommentReplies=l,popCommentBarrage=o,removeCommentBarrage=d,commentBarrageConfig={maxBarrage:GLOBAL_CONFIG.commentBarrageConfig.maxBarrage,barrageTime:GLOBAL_CONFIG.commentBarrageConfig.barrageTime,twikooUrl:GLOBAL_CONFIG.twikooEnvId,accessToken:GLOBAL_CONFIG.commentBarrageConfig.accessToken,mailMd5:GLOBAL_CONFIG.commentBarrageConfig.mailMd5,pageUrl:window.location.pathname,barrageTimer:[],barrageList:[],barrageIndex:0,dom:document.querySelector(".comment-barrage")},commentInterval=null,hoverOnCommentBarrage=!1;document.querySelector(".comment-barrage").addEventListener("mouseenter",function(){hoverOnCommentBarrage=!0}),document.querySelector(".comment-barrage").addEventListener("mouseleave",function(){hoverOnCommentBarrage=!1});const m=e=>{const t=document.querySelector(".comment-barrage"),a=document.getElementById("post-comment");e.forEach(s=>{a&&t&&document.body.clientWidth>768&&(t.style.bottom=s.isIntersecting?`-${commentBarrageConfig.maxBarrage*200}px`:"0")})},h=new IntersectionObserver(m,{root:null,rootMargin:"0px",threshold:0}),u=document.getElementById("post-comment");u&&h.observe(u),c(),localStorage.getItem("commentBarrageSwitch")!=="false"?(document.querySelector(".comment-barrage").style.display="flex",document.querySelector(".menu-commentBarrage-text").textContent="\u5173\u95ED\u70ED\u8BC4"):(document.querySelector(".comment-barrage").style.display="none",document.querySelector(".menu-commentBarrage-text").textContent="\u663E\u793A\u70ED\u8BC4"),document.addEventListener("pjax:send",function(){clearInterval(commentInterval)})}
+        `;
+
+    // 获取anzhiyu标签内的所有pre元素
+    let anzhiyuPres = barrage.querySelectorAll("anzhiyu pre");
+
+    // 遍历每个pre元素，将其替换为"【代码】"
+    anzhiyuPres.forEach(pre => {
+      let codePlaceholder = document.createElement("span");
+      codePlaceholder.innerText = "【代码】";
+      pre.parentNode.replaceChild(codePlaceholder, pre);
+    });
+
+    // 获取anzhiyu标签内的所有图片元素
+    let anzhiyuImages = barrage.querySelectorAll("anzhiyu img");
+
+    // 遍历每个图片元素，将其替换为"【图片】"，但排除带有class=tk-owo-emotion的图片
+    anzhiyuImages.forEach(image => {
+      if (!image.classList.contains("tk-owo-emotion")) {
+        image.style.display = "none"; // 隐藏图片
+        let placeholder = document.createElement("span");
+        placeholder.innerText = "【图片】";
+        image.parentNode.replaceChild(placeholder, image);
+      }
+    });
+    commentBarrageConfig.barrageTimer.push(barrage);
+    commentBarrageConfig.dom.append(barrage);
+  }
+
+  function removeCommentBarrage(barrage) {
+    barrage.className = "comment-barrage-item out";
+
+    setTimeout(() => {
+      if (commentBarrageConfig.dom && commentBarrageConfig.dom.contains(barrage)) {
+        commentBarrageConfig.dom.removeChild(barrage);
+      }
+    }, 1000);
+  }
+
+  // 自动隐藏
+  const commentEntryCallback = entries => {
+    const commentBarrage = document.querySelector(".comment-barrage");
+    const postComment = document.getElementById("post-comment");
+
+    entries.forEach(entry => {
+      if (postComment && commentBarrage && document.body.clientWidth > 768) {
+        commentBarrage.style.bottom = entry.isIntersecting ? `-${commentBarrageConfig.maxBarrage * 200}px` : "0";
+      }
+    });
+  };
+  // 创建IntersectionObserver实例
+  const observer = new IntersectionObserver(commentEntryCallback, {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0,
+  });
+  // 监视目标元素
+  const postCommentTarget = document.getElementById("post-comment");
+  if (postCommentTarget) {
+    observer.observe(postCommentTarget);
+  }
+
+  initCommentBarrage();
+
+  if (localStorage.getItem("commentBarrageSwitch") !== "false") {
+    document.querySelector(".comment-barrage").style.display = "flex";
+    document.querySelector(".menu-commentBarrage-text").textContent = "关闭热评";
+  } else {
+    document.querySelector(".comment-barrage").style.display = "none";
+    document.querySelector(".menu-commentBarrage-text").textContent = "显示热评";
+  }
+
+  document.addEventListener("pjax:send", function () {
+    clearInterval(commentInterval);
+  });
+}

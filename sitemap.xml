@@ -313,7 +313,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/05-link-footer-misc/</loc>
+    <loc>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/06-deployment-cicd/</loc>
     
     <lastmod>2026-07-30</lastmod>
     
@@ -325,7 +325,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/06-deployment-cicd/</loc>
+    <loc>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/05-link-footer-misc/</loc>
     
     <lastmod>2026-07-30</lastmod>
     
@@ -568,22 +568,6 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/anzhiyu/</loc>
-    <lastmod>2026-08-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
-    <lastmod>2026-07-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
     <loc>https://blog.weiguang.eu.org/tags/%E5%86%99%E4%BD%9C/</loc>
     <lastmod>2026-08-09</lastmod>
     <changefreq>weekly</changefreq>
@@ -600,15 +584,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/FriendCircle/</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/</loc>
+    <loc>https://blog.weiguang.eu.org/tags/anzhiyu/</loc>
     <lastmod>2026-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -616,40 +592,8 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E5%8F%8B%E9%93%BE/</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/Rust/</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/GitHub-Actions/</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
-    <lastmod>2026-07-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E6%8E%92%E9%94%99/</loc>
-    <lastmod>2026-07-31</lastmod>
+    <loc>https://blog.weiguang.eu.org/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -657,6 +601,30 @@
   
   <url>
     <loc>https://blog.weiguang.eu.org/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/</loc>
+    <lastmod>2026-08-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/%E7%9B%B8%E5%86%8C/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/%E7%94%BB%E5%BB%8A/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2026-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -680,7 +648,15 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E7%9B%B8%E5%86%8C/</loc>
+    <loc>https://blog.weiguang.eu.org/tags/GitHub-Actions/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/Cloudflare-Pages/</loc>
     <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -688,8 +664,40 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E7%94%BB%E5%BB%8A/</loc>
-    <lastmod>2026-07-30</lastmod>
+    <loc>https://blog.weiguang.eu.org/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/%E4%B8%BB%E9%A2%98/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/%E5%8D%87%E7%BA%A7/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/git/</loc>
+    <lastmod>2026-07-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/tags/%E5%8F%8B%E9%93%BE/</loc>
+    <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -705,14 +713,6 @@
   
   <url>
     <loc>https://blog.weiguang.eu.org/tags/%E6%9D%82%E9%A1%B9%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2026-07-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
-    <loc>https://blog.weiguang.eu.org/tags/Cloudflare-Pages/</loc>
     <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -760,7 +760,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/</loc>
+    <loc>https://blog.weiguang.eu.org/tags/FriendCircle/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -768,7 +768,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E4%B8%BB%E9%A2%98/</loc>
+    <loc>https://blog.weiguang.eu.org/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -776,7 +776,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/%E5%8D%87%E7%BA%A7/</loc>
+    <loc>https://blog.weiguang.eu.org/tags/Rust/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -784,7 +784,7 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/tags/git/</loc>
+    <loc>https://blog.weiguang.eu.org/tags/%E6%8E%92%E9%94%99/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
@@ -796,6 +796,14 @@
   <url>
     <loc>https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/</loc>
     <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  
+  <url>
+    <loc>https://blog.weiguang.eu.org/categories/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/</loc>
+    <lastmod>2026-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -818,14 +826,6 @@
   
   
   <url>
-    <loc>https://blog.weiguang.eu.org/categories/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/</loc>
-    <lastmod>2026-08-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  
-  
-  <url>
     <loc>https://blog.weiguang.eu.org/categories/Hexo%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97/</loc>
     <lastmod>2026-07-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -835,7 +835,7 @@
 
   <url>
     <loc>https://blog.weiguang.eu.org/</loc>
-    <lastmod>2026-10-03</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
