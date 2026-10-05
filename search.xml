@@ -20,6 +20,8 @@
       
         <tags>
             
+            <tag> 教程 </tag>
+            
             <tag> Hexo </tag>
             
             <tag> CI/CD </tag>
@@ -27,8 +29,6 @@
             <tag> Twikoo </tag>
             
             <tag> Waline </tag>
-            
-            <tag> 教程 </tag>
             
         </tags>
       
@@ -82,9 +82,9 @@
       
         <tags>
             
-            <tag> Waline </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Waline </tag>
             
             <tag> 安全 </tag>
             
@@ -113,9 +113,9 @@
       
         <tags>
             
-            <tag> Waline </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Waline </tag>
             
             <tag> 图床 </tag>
             
@@ -175,9 +175,9 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Hexo </tag>
             
             <tag> anzhiyu </tag>
             
@@ -206,9 +206,9 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Hexo </tag>
             
             <tag> anzhiyu </tag>
             
@@ -237,9 +237,9 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Hexo </tag>
             
             <tag> anzhiyu </tag>
             
@@ -299,13 +299,13 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
-            <tag> CI/CD </tag>
-            
             <tag> 教程 </tag>
             
+            <tag> Hexo </tag>
+            
             <tag> anzhiyu </tag>
+            
+            <tag> CI/CD </tag>
             
         </tags>
       
@@ -330,13 +330,13 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
-            <tag> CI/CD </tag>
-            
             <tag> 教程 </tag>
             
+            <tag> Hexo </tag>
+            
             <tag> anzhiyu </tag>
+            
+            <tag> CI/CD </tag>
             
         </tags>
       
@@ -361,9 +361,9 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Hexo </tag>
             
             <tag> anzhiyu </tag>
             
@@ -392,9 +392,9 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Hexo </tag>
             
             <tag> anzhiyu </tag>
             
@@ -710,9 +710,9 @@
             
             <tag> Hexo </tag>
             
-            <tag> CI/CD </tag>
-            
             <tag> anzhiyu </tag>
+            
+            <tag> CI/CD </tag>
             
             <tag> GitHub Actions </tag>
             
@@ -892,9 +892,9 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> Hexo </tag>
             
             <tag> anzhiyu </tag>
             
