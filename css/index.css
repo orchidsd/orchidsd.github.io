@@ -23807,6 +23807,22 @@ html[data-theme="dark"] a.categoryButton.green {
   color: #18171d !important;
 }
 
+/* 14. AI 摘要按钮 dark：底色是站点主色 #816350 配深字，只有 3.25。
+ *     保持色相（HSL 23.3,23.4%）只提亮 10% → #9F7B65，4.66 达标。
+ *     light 白字底 5.48 本来就过；hover 底为 --anzhiyu-theme #f2b94b 配深字也过，都不动。 */
+[data-theme="dark"] .ai-btn-item {
+  background: #9f7b65;
+}
+
+/* 15. 打赏按钮 dark：tag_page.styl 刻意压到 opacity .5，于是白字合成成 #909195、
+ *     红底合成成 #7d2233，只有 3.11。提到 .85 也才 4.55，且「把可点控件调暗」
+ *     本身就是可用性问题（用户看不出它可点），故暗色下直接取消压暗：
+ *     满不透明 + 上面第 6 条的 #d8213c 底 = 5.00。
+ *     同一规则里的 .reward-link.mode 本项目未启用，保留原样不覆盖。 */
+[data-theme="dark"] .post-reward .reward-button {
+  opacity: 1;
+}
+
 #page:has(#lib-cards):has(#libCategories) #post-comment .tk-comments-container > .tk-comment {
   border: none;
   box-shadow: none;
