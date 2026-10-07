@@ -1,1 +1,286 @@
-#post-top-cover{filter:blur(0px)!important}#nav{background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border-bottom:none!important;box-shadow:none!important;outline:1px solid transparent!important}#page-header.nav-fixed #nav{background:var(--anzhiyu-card-bg)!important;outline:1px solid var(--anzhiyu-card-border)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}#nav{height:60px!important;padding:0!important;transition:background .3s,box-shadow .3s!important}#nav-group{--nav-pad: 24px;max-width:1400px;width:100%;margin:0 auto;padding:0 var(--nav-pad);display:flex;align-items:center;height:60px}#nav #nav-right{right:var(--nav-pad)}#blog_name{display:flex!important;align-items:center!important;height:60px!important;padding:0!important;margin:0!important;gap:8px}#blog_name #site-name{display:flex!important;align-items:center!important;height:35px!important;padding:0 2px!important;border-radius:50px!important;font-size:1em!important;font-weight:700!important;line-height:35px!important;transition:all .3s!important;white-space:nowrap!important}#blog_name #site-name:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important}#blog_name #site-name .title{font-weight:700!important}#blog_name #site-name i{font-size:.85em!important;margin-left:4px!important}#blog_name .back-home-button{display:none!important}#blog_name .back-home-button>i{display:flex!important;align-items:center!important;justify-content:center!important;width:32px!important;height:32px!important;border-radius:50%!important;font-size:1em!important;cursor:pointer!important;transition:all .3s!important}#blog_name .back-home-button>i:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important}#nav #menus{position:absolute!important;inset:0!important;width:auto!important;height:60px!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important}#nav .menus_items{display:flex!important;align-items:center!important;gap:4px!important;font-size:1em!important}#nav .menus_items .menus_item>a{padding:0 12.98px 0 16.22px!important;border-radius:50px!important;font-size:1.014em!important;font-weight:700!important;line-height:35px!important;transition:all .3s!important;white-space:nowrap!important}#nav .menus_items .menus_item>a:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important;transform:translateY(-1px)!important}#nav .menus_items .menus_item .menus_item_child{border-radius:12px!important;padding:8px!important;box-shadow:0 8px 32px #0000001f!important;border:1px solid rgba(0,0,0,.06)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important}[data-theme=dark] #nav .menus_items .menus_item .menus_item_child{background:#1e1e1ef2!important;border:1px solid rgba(255,255,255,.08)!important}#nav .menus_items .menus_item .menus_item_child li a{padding:6px 16px!important;border-radius:50px!important;font-size:.85em!important;transition:all .25s!important}#nav .menus_items .menus_item .menus_item_child li a:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important}#nav-right{display:flex!important;align-items:center!important;gap:16px!important}#nav-right .nav-button{display:flex!important;align-items:center!important}#nav-right .nav-button a:not(.totopbtn),#nav-right .nav-button>a:not(.totopbtn){display:flex!important;align-items:center!important;justify-content:center!important;width:35px!important;height:35px!important;border-radius:50%!important;font-size:1em!important;transition:all .3s!important}#nav-right .nav-button a:hover,#nav-right .nav-button>a:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important;transform:translateY(-1px)!important;box-shadow:0 4px 12px #00000026!important}#nav-right #search-button .search span{display:none!important}#nav-right #nav-totop{display:flex!important}#nav-right #nav-totop .totopbtn:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important}#toggle-menu a{display:flex!important;align-items:center!important;justify-content:center!important;width:36px!important;height:36px!important;border-radius:50%!important;transition:all .3s!important}#toggle-menu a:hover{background:var(--anzhiyu-main)!important;color:var(--anzhiyu-white)!important}@media screen and (max-width:768px){#nav-group{--nav-pad: 20px}#blog_name #site-name .title{font-size:.9em!important}#nav #menus{display:none!important}}@media screen and (min-width:992px){div#bannerGroup{height:406px!important}}[data-theme=light] #web_bg{background-image:radial-gradient(ellipse 62% 48% at 32% 30%,rgba(105,175,250,.5),transparent 70%),radial-gradient(ellipse 58% 44% at 70% 32%,rgba(150,135,250,.42),transparent 70%),radial-gradient(ellipse 78% 52% at 50% 72%,rgba(90,200,230,.38),transparent 72%)}
+#post-top-cover {
+  filter: blur(0px) !important;
+}
+
+/* ========================================
+   导航栏 Ariasaka 风格改造
+   ======================================== */
+
+/* 导航栏整体：对齐 mnchen.cn —— 顶部完全透明，滚动后只加卡片底色 + 1px 描边 */
+/* mnchen 不用 blur / 圆角 / 阴影，描边走 outline 以免撑高 60px 的导航 */
+#nav {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: 1px solid transparent !important;
+}
+
+/* 滚动后：mnchen #page-header.nav-fixed #nav 原样（只有底色 + 1px 描边，无阴影无模糊） */
+#page-header.nav-fixed #nav {
+  background: var(--anzhiyu-card-bg) !important;
+  outline: 1px solid var(--anzhiyu-card-border) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 导航栏高度；内边距交给 #nav-group，以便与 .container(1400+24) 左右对齐 */
+#nav {
+  height: 60px !important;
+  padding: 0 !important;
+  transition: background 0.3s, box-shadow 0.3s !important;
+}
+
+/* 左侧站点名：紧凑排列 */
+#nav-group {
+  --nav-pad: 24px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--nav-pad);
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+
+/* #nav-right 是 position:absolute;right:0（nav.styl:563），绝对定位按 padding box
+   解析，不吃 #nav-group 的 padding，必须手动贴回内容右边缘 */
+#nav #nav-right {
+  right: var(--nav-pad);
+}
+
+#blog_name {
+  display: flex !important;
+  align-items: center !important;
+  height: 60px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 8px;
+}
+
+#blog_name #site-name {
+  display: flex !important;
+  align-items: center !important;
+  height: 35px !important;
+  padding: 0 2px !important;
+  border-radius: 50px !important;
+  font-size: 1em !important;
+  font-weight: 700 !important;
+  line-height: 35px !important;
+  transition: all 0.3s !important;
+  white-space: nowrap !important;
+}
+
+#blog_name #site-name:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+}
+
+#blog_name #site-name .title {
+  font-weight: 700 !important;
+}
+
+#blog_name #site-name i {
+  font-size: 0.85em !important;
+  margin-left: 4px !important;
+}
+
+/* 返回首页按钮（grip-vertical icon）—— 按要求关闭 */
+#blog_name .back-home-button {
+  display: none !important;
+}
+
+#blog_name .back-home-button > i {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  font-size: 1em !important;
+  cursor: pointer !important;
+  transition: all 0.3s !important;
+}
+
+#blog_name .back-home-button > i:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+}
+
+/* 中间菜单：mnchen 是 position:absolute; inset:0 铺满导航，靠 justify-content 真正居中 */
+#nav #menus {
+  position: absolute !important;
+  inset: 0 !important;
+  width: auto !important;
+  height: 60px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#nav .menus_items {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  /* 主题给 .menus_items 加了 1.3em，mnchen 侧是 1em，压回去下面的 1.014em 才是 16.224px */
+  font-size: 1em !important;
+}
+
+#nav .menus_items .menus_item > a {
+  padding: 0 12.98px 0 16.22px !important;
+  border-radius: 50px !important;
+  font-size: 1.014em !important;
+  font-weight: 700 !important;
+  line-height: 35px !important;
+  transition: all 0.3s !important;
+  white-space: nowrap !important;
+}
+
+#nav .menus_items .menus_item > a:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 下拉菜单样式 */
+#nav .menus_items .menus_item .menus_item_child {
+  border-radius: 12px !important;
+  padding: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+[data-theme="dark"] #nav .menus_items .menus_item .menus_item_child {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+#nav .menus_items .menus_item .menus_item_child li a {
+  padding: 6px 16px !important;
+  border-radius: 50px !important;
+  font-size: 0.85em !important;
+  transition: all 0.25s !important;
+}
+
+#nav .menus_items .menus_item .menus_item_child li a:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+}
+
+/* 右侧按钮组：mnchen 间距 16px、按钮 35×35 */
+#nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+#nav-right .nav-button {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* :not(.totopbtn) —— 回到顶部那颗是随滚动百分比变宽的药丸，由主题自己控制尺寸 */
+#nav-right .nav-button a:not(.totopbtn),
+#nav-right .nav-button > a:not(.totopbtn) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50% !important;
+  font-size: 1em !important;
+  transition: all 0.3s !important;
+}
+
+#nav-right .nav-button a:hover,
+#nav-right .nav-button > a:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 搜索按钮文字隐藏（只留图标） */
+#nav-right #search-button .search span {
+  display: none !important;
+}
+
+/* 回到顶部按钮 */
+#nav-right #nav-totop {
+  display: flex !important;
+}
+
+#nav-right #nav-totop .totopbtn:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+}
+
+/* 汉堡菜单按钮 */
+#toggle-menu a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  transition: all 0.3s !important;
+}
+
+#toggle-menu a:hover {
+  background: var(--anzhiyu-main) !important;
+  color: var(--anzhiyu-white) !important;
+}
+
+/* 导航栏响应式：移动端 */
+@media screen and (max-width: 768px) {
+  #nav-group {
+    --nav-pad: 20px;
+  }
+  #blog_name #site-name .title {
+    font-size: 0.9em !important;
+  }
+  #nav #menus {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   首页顶部左右两栏等高
+   音乐卡是固定 625×406 的组件（992px 以上实测恒为 406），
+   而主题 home_top.css 把 #bannerGroup 钉死在 340px，底部差 66px。
+   拉齐左栏，播放器不动。991px 以下播放器被隐藏，仍用主题的 340。
+   ======================================== */
+@media screen and (min-width: 992px) {
+  div#bannerGroup {
+    height: 406px !important;
+  }
+}
+
+/* ========================================
+   浅色模式背景：云雾渐变
+   主题的 Universe 星空只认 data-theme="dark"（dark.css 的 display:none +
+   dark.js 的绘制条件），且星色是暖黄/淡紫硬编码在 CDN 脚本里，
+   落在 #f7f9fe 上本来就看不见 —— 浅色只能自己补。
+
+   坑一：#web_bg 是 width/height 200% + top/left -50%，可视区只是它的中央 50%。
+   渐变坐标按整块元素算，中心必须落在 25%~75%；写 12%/88%/100% 会把色团
+   甩到可视区外，只剩尾巴。
+   坑二：卡片不透明、盖住页面绝大部分面积，渐变只在留白和卡片缝隙露出来。
+   alpha 必须给足（0.5 档），否则肉眼等于没变（0.22 档实测仅偏离 26/255）。
+   正文都在卡片上，背景再浓也不影响可读性。
+   只覆盖 background-image，底色 --anzhiyu-background 作为最底层保留。
+   深色模式有 canvas 星空，不叠加，避免与流星抢视觉。
+   ======================================== */
+[data-theme="light"] #web_bg {
+  background-image:
+    radial-gradient(ellipse 62% 48% at 32% 30%, rgba(105, 175, 250, 0.5), transparent 70%),
+    radial-gradient(ellipse 58% 44% at 70% 32%, rgba(150, 135, 250, 0.42), transparent 70%),
+    radial-gradient(ellipse 78% 52% at 50% 72%, rgba(90, 200, 230, 0.38), transparent 72%);
+}
+
