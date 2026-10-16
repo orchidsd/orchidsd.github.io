@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+# 分类/标签页是长尾关键词落地页（/tags/waline/、/categories/技术/），不能封：
+# robots.txt 的 Disallow 会让 Google 读不到页面级 noindex，站内链接仍可能把它
+# 索引成「无信息」条目。分页 /page/ 是首页的重复内容，继续封。
+Disallow: /page/
+Disallow: /css/
+Disallow: /js/
+Disallow: /img/
+
+Sitemap: https://blog.weiguang.eu.org/sitemap.xml

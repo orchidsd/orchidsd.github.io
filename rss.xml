@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Yokiの小站</title>
+    <link>https://blog.weiguang.eu.org/</link>
+    <description>记录学习和生活的点点滴滴</description>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2026, Yoki</copyright>
+    <lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
+    <generator>Hexo</generator>
+    <atom:link href="https://blog.weiguang.eu.org/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>博客工程维护复盘：CI 收敛与评论图片放大双 Bug 修复实录</title>
+      <link>https://blog.weiguang.eu.org/2026/08/12/blog-maintenance-ci-comments/</link>
+      <description>一次集中维护：CI 技术栈与凭证统一（friend-check 并入 deploy.yml 单一构建链）、Lighthouse 门禁从 warn 收紧为 error、图片上传 Worker 下线 webdav 渠道，以及评论系统两个镜像 Bug——Waline 评论区图片点不动、Twikoo 评论图片放大两次的完整根因与修复。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/CI-CD/">CI/CD</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Twikoo/">Twikoo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Waline/">Waline</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>优质教程博文怎么写？从 web.dev、DigitalOcean、freeCodeCamp 提炼的编写结构与流程</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/writing-tutorial-methodology/</link>
+      <description>拆解 web.dev、DigitalOcean、freeCodeCamp 三家的代表性教程，提炼出「悬念开头、目标声明、Step+预期输出、检查点、FAQ、延伸阅读」六大结构件与可落地的编写流程，附本站脚手架模板。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/">经验分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%86%99%E4%BD%9C/">写作</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8D%9A%E5%AE%A2%E8%BF%90%E8%90%A5/">博客运营</category>
+      <pubDate>Sun, 09 Aug 2026 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Waline 评论图片上传系列（二）：Cloudflare Worker 代理上传——Token 移出前端与安全防护</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/waline-series/02-worker-proxy/</link>
+      <description>把图床 Token 从静态产物里彻底移除：Cloudflare Worker 代理上传（Origin 白名单 + KV 限流 + 渠道白名单 + 类型大小限制），前端弹窗让访客自选渠道，localStorage 记忆。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Waline/">Waline</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%AE%89%E5%85%A8/">安全</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Cloudflare-Workers/">Cloudflare Workers</category>
+      <pubDate>Sun, 09 Aug 2026 09:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Waline 评论图片上传系列（一）：Waline + CloudFlare ImgBed 图床配置（整理版）</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/waline-series/01-imgbed-upload/</link>
+      <description>Waline 评论框图片上传对接 CloudFlare ImgBed 图床的完整配置：imageUploader 函数、waline.pug 传参、跨域排查——以及初版方案 Token 硬编码的致命缺陷与演进方向。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Waline/">Waline</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%9B%BE%E5%BA%8A/">图床</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/">评论系统</category>
+      <pubDate>Sun, 09 Aug 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Waline 评论图片上传系列 — 导航目录</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/waline-series/00-series-index/</link>
+      <description>Waline 评论图片上传全系列：从浏览器直连图床的初版方案，到 Cloudflare Worker 代理 + 访客自选渠道的最终架构，覆盖安全、限流、前端交互的完整演进。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Waline/">Waline</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%9B%BE%E5%BA%8A/">图床</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/">评论系统</category>
+      <pubDate>Sun, 09 Aug 2026 08:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>anzhiyu 音乐播放器深度魔改系列（三）：控制条与布局——展开折叠、音量条与控制台态</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/music-player-series/03-controls-layout/</link>
+      <description>左下角播放器从 25px 小卡到 100px 大卡片：折叠/展开双态、空闲自动收起、自绘常驻音量条、控制台大圆盘布局，以及「aplayer-withlrc 类从未匹配」的隐藏大坑。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/">音乐播放器</category>
+      <pubDate>Sun, 09 Aug 2026 07:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>anzhiyu 音乐播放器深度魔改系列（二）：歌词功能——URL 歌词、自绘滚动与竞态根治</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/music-player-series/02-lyrics/</link>
+      <description>播放器歌词一直「暂无歌词」？APlayer lrcType 3 异步 fetch 天生不同步？本文用 window.__parseLrc 统一解析 + timeupdate 自绘滚动 + 音乐馆竞态对比根治，让歌词逐行精准跟唱。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/">音乐播放器</category>
+      <pubDate>Sun, 09 Aug 2026 07:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>anzhiyu 音乐播放器深度魔改系列（一）：切页零中断——pjax 下播放不暂停的架构与补丁</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/music-player-series/01-pjax-zero-interrupt/</link>
+      <description>翻页即断歌的终极解法：audio 常驻 body 隐藏容器 + patch APlayer 原型三件套（destroy/initAudio/setAudio）+ sessionStorage 状态恢复，实现 pjax 切页声音零中断。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/">音乐播放器</category>
+      <pubDate>Sun, 09 Aug 2026 06:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>anzhiyu 音乐播放器深度魔改系列 — 导航目录</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/music-player-series/00-series-index/</link>
+      <description>anzhiyu 音乐播放器深度魔改全系列 3 篇文章导航，涵盖切页零中断播放、歌词功能、控制条与布局三大主题，附源码位置与验证工具。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/">音乐播放器</category>
+      <pubDate>Sun, 09 Aug 2026 06:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（十）：部署三层验证 SOP</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/hexo-anzhiyu-series/10-deploy-verify/</link>
+      <description>push 成功不代表上线成功：源码仓库、部署产物仓库、线上 CDN 三层逐层验证的标准化流程，配合 curl/git 命令与 Cloudflare Workers 轮询特性，杜绝「看着绿了其实没上」。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/CI-CD/">CI/CD</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <pubDate>Sun, 09 Aug 2026 05:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（九）：CI 质量门禁四道检查搭建实录</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/hexo-anzhiyu-series/09-quality-ci/</link>
+      <description>一个 quality.yml 挂四道检查：构建、Gitleaks 泄漏扫描、Lighthouse 性能审计、内部链接死链检测，全部压进 push 流程，让「上线即翻车」成为过去式。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/CI-CD/">CI/CD</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <pubDate>Sun, 09 Aug 2026 04:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（八）：API Key 安全注入与 Gitleaks 泄漏扫描修复实录</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/hexo-anzhiyu-series/08-api-key-security/</link>
+      <description>AI 摘要 apiKey 曾明文入库被 Gitleaks 检出：如何用 before_generate filter 从环境变量注入、.gitleaks.toml 豁免公共 key、GitHub Secrets 传递，以及 key 轮换与验证的完整实战。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%AE%89%E5%85%A8/">安全</category>
+      <pubDate>Sun, 09 Aug 2026 03:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（七）：侧边栏目录仿 anheyu 风格魔改实录</title>
+      <link>https://blog.weiguang.eu.org/2026/08/09/hexo-anzhiyu-series/07-toc-style/</link>
+      <description>用 pug 模板 + stylus 样式 + patch 归档三步，把 anzhiyu 侧边栏目录改造成 blog.anheyu.com 风格：标题计数胶囊、blur 半透明非活跃态、主题色高亮指示条，并用 puppeteer 逐项对比验证。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/">主题定制</category>
+      <pubDate>Sun, 09 Aug 2026 02:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>安知鱼主题升级与 Patch 归档策略</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/hexo-anzhiyu-series/04-theme-upgrade-patch/</link>
+      <description>详解 anzhiyu 主题的版本升级流程、patch-package 定制补丁的生成与归档策略，避免升级后定制丢失。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/Hexo%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97/">Hexo博客系列</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%AE%89%E7%9F%A5%E9%B1%BC/">安知鱼</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E4%B8%BB%E9%A2%98/">主题</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8D%87%E7%BA%A7/">升级</category>
+      <category domain="https://blog.weiguang.eu.org/tags/git/">git</category>
+      <pubDate>Fri, 31 Jul 2026 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>踩坑与问题排查实录</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/06-troubleshooting/</link>
+      <description>友链朋友圈自动化搭建中的真实踩坑记录：guoqi.dev 重定向丢路径、后端&quot;缺关键字段 title&quot;、CF 构建 522 与缺 wrangler.jsonc、管理面板登不进、PowerShell TLS 误报、Actions IP 被屏蔽。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%8E%92%E9%94%99/">排错</category>
+      <pubDate>Fri, 31 Jul 2026 01:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>朋友圈失联统计显示（前端注入）</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/05-lost-contact-stat/</link>
+      <description>在朋友圈 footer 注入&quot;失联 N&quot;统计：脚本读后端 /all 的 error_num，动态插入 fc-lost-contact 标签，随后端状态自动显示与隐藏，无需每次构建。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/FriendCircle/">FriendCircle</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <pubDate>Fri, 31 Jul 2026 00:50:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>友链自动检测与自动部署（GitHub Actions）</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/04-auto-detect-deploy/</link>
+      <description>用 GitHub Actions 实现友链每日自动检测：读后端 /friend 的 error 字段自动归类失联友链、自动构建、自动推送到部署产物仓库、Cloudflare 自动上线，并复盘过程中踩过的三个坑。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/GitHub-Actions/">GitHub Actions</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</category>
+      <pubDate>Fri, 31 Jul 2026 00:40:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>后端部署：hexo-circle-of-friends（Vercel + fork）</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/03-backend/</link>
+      <description>部署 hexo-circle-of-friends 后端：fork 仓库、GitHub Actions 每 3 小时全量爬取友链文章、data.db 数据库、API 端点详解、error 字段的判定语义。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/FriendCircle/">FriendCircle</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Rust/">Rust</category>
+      <pubDate>Fri, 31 Jul 2026 00:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>朋友圈（FriendCircle）页面搭建</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/02-fcircle-page/</link>
+      <description>在 anzhiyu 主题上接入 hexo-circle-of-friends 朋友圈：bundle 引入、fcircle.pug 配置、FC_API_URL 注入、随机文章、以及管理面板入口的隐藏。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/FriendCircle/">FriendCircle</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <pubDate>Fri, 31 Jul 2026 00:20:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>友链页搭建与 link.yml 深度解析</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/01-link-page/</link>
+      <description>从 link.yml 数据结构到 flink.pug 模板修复，详解 anzhiyu 主题友链页的多分组、失联组（lost_contact）机制，以及与官方友链页的差异对比。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8F%8B%E9%93%BE/">友链</category>
+      <pubDate>Fri, 31 Jul 2026 00:10:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>友链朋友圈自动化全攻略 — 系列导航与总体架构</title>
+      <link>https://blog.weiguang.eu.org/2026/07/31/friend-circle-series/00-series-index/</link>
+      <description>友链朋友圈自动化全攻略系列 7 篇文章导航目录，涵盖总体架构、友链页与 link.yml、朋友圈搭建、后端部署、自动检测与自动部署、失联统计显示、踩坑排查的完整知识体系。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/FriendCircle/">FriendCircle</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（五）：友链页顶部区块、底部版权栏、音乐页/时钟/代码注入等杂项配置</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/05-link-footer-misc/</link>
+      <description>一文搞定 anzhiyu 友链页 linkPageTop 欢迎区块、footerBar.cc 版权协议链接、音乐页关闭评论、导航栏时钟关闭、inject 代码注入双模式等零散但高频的配置项。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8F%8B%E9%93%BE/">友链</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%BA%95%E9%83%A8%E6%A0%8F/">底部栏</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%9D%82%E9%A1%B9%E9%85%8D%E7%BD%AE/">杂项配置</category>
+      <pubDate>Thu, 30 Jul 2026 06:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（六）：部署与 CI/CD 终极指南</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/06-deployment-cicd/</link>
+      <description>从零搭建生产级部署流水线：GitHub Actions + Cloudflare Pages 双轨部署、Secrets 安全注入敏感配置、Git Submodule 主题升级流程、配置文件自动化生成、常见坑与排错清单。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/CI-CD/">CI/CD</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/GitHub-Actions/">GitHub Actions</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Cloudflare-Pages/">Cloudflare Pages</category>
+      <pubDate>Thu, 30 Jul 2026 06:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题配置与定制全记录</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-config-guide/</link>
+      <description>记录 Hexo anzhiyu 主题从零开始的配置、定制与踩坑全过程，包含 51.LA 统计、AI 摘要、相册、友链页等实战配置</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</category>
+      <pubDate>Thu, 30 Jul 2026 05:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（五）：相册系统全解析 —— Type 1/2/3 三种布局 + Pixiv 专辑实战</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/03-album-system/</link>
+      <description>深度拆解 anzhiyu 相册系统的数据结构、三种渲染模式（瀑布流/画廊/时间轴）、模板引擎实现、以及新增 Pixiv 专辑的完整步骤。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%9B%B8%E5%86%8C/">相册</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%94%BB%E5%BB%8A/">画廊</category>
+      <pubDate>Thu, 30 Jul 2026 05:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（二）：51.LA 双 SDK 统计与 AI 摘要三模式</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/02-statistics-ai-abstract/</link>
+      <description>详解 51.LA 流量统计+雀灵性能监控双 SDK 动态注入实现，以及文章顶部 AI 摘要的 local/tianli/openai 三模式切换、缓存机制与自动化配置。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/">统计分析</category>
+      <category domain="https://blog.weiguang.eu.org/tags/AI-%E6%91%98%E8%A6%81/">AI 摘要</category>
+      <pubDate>Thu, 30 Jul 2026 02:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列（一）：环境版本锁定、目录结构设计与零冲突升级策略</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/01-environment-structure/</link>
+      <description>奠定全系列基石：Node/pnpm/Hexo/主题版本锁定、Git Submodule 管理主题源码、自定义覆盖层设计、以及「升级主题零冲突」的标准化流程。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E4%B8%BB%E9%A2%98%E5%AE%9A%E5%88%B6/">主题定制</category>
+      <pubDate>Thu, 30 Jul 2026 01:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Hexo anzhiyu 主题深度定制系列 — 导航目录与全系列汇总</title>
+      <link>https://blog.weiguang.eu.org/2026/07/30/hexo-anzhiyu-series/00-series-index/</link>
+      <description>Hexo anzhiyu 主题深度定制全系列 10 篇文章导航目录，涵盖环境版本锁定、51.LA 统计、AI 摘要、相册系统、主题升级与补丁策略、杂项配置、CI/CD 部署、TOC 魔改、密钥安全、质量门禁与部署验证的完整知识体系。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B/">系列教程</category>
+      <pubDate>Thu, 30 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Waline评论框图片上传添加CloudFlare ImgBed图床支持</title>
+      <link>https://blog.weiguang.eu.org/2026/04/12/waline%E6%B7%BB%E5%8A%A0CloudFlare_ImgBed/</link>
+      <description>手把手教你将 CloudFlare ImgBed 上传 API 集成到 Waline 评论系统，实现评论图片直接上传图床，告别外链失效。</description>
+      <author>Yoki</author>
+      <category domain="https://blog.weiguang.eu.org/categories/%E5%AD%A6%E4%B9%A0/">学习</category>
+      <category domain="https://blog.weiguang.eu.org/tags/Hexo/">Hexo</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E6%95%99%E7%A8%8B/">教程</category>
+      <category domain="https://blog.weiguang.eu.org/tags/anzhiyu/">anzhiyu</category>
+      <category domain="https://blog.weiguang.eu.org/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</category>
+      <pubDate>Sat, 11 Apr 2026 16:54:03 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
